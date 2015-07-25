@@ -2,7 +2,7 @@ bottom_base_width = 18.10;
 bottom_base_length = 18.10;
 
 top_base_height_back = 9.39;
-top_base_height_front = 8.39;
+top_base_height_front = 9.39;
 top_base_width = 12.37;
 top_base_length = 14.65;
 
@@ -18,7 +18,7 @@ base_radius = 1.5;
 thickness = 1.2;
 cylinder_radius = 40;
 
-$fn = 400;
+$fn = 720;
 
 cylinder_translate_distance = sagitta(cylinder_radius, top_base_width);
 key_scale = (bottom_base_width - thickness) / bottom_base_width;
@@ -40,24 +40,24 @@ module key_shape() {
 	cylinder_rotated_translate_z = cos(top_base_angle) * cylinder_translate_distance;
 	cylinder_rotated_translate_y = sin(top_base_angle) * cylinder_translate_distance;
 	
-	cylinder_bizarre_size = cylinder_translate_distance/tan(base_angle - top_base_angle);
+	cylinder_bizarre_size = cylinder_rotated_translate_z/tan(base_angle - top_base_angle);
 	//cylinder_bizarre_size = 0.25;
 	echo(cylinder_bizarre_size);
 
-	difference() {
-		hull() {
+	//difference() {
+		//hull() {
 			base(bottom_base_width, bottom_base_width);
 
 			translate([(bottom_base_width - top_base_width) / 2, 0, top_base_height_back])
 			rotate([-top_base_angle, 0, 0])
 				base(top_base_width, top_base_new_length);
-		}
+		//}
 	
 		translate([bottom_base_width/2, -cylinder_rotated_translate_y, top_base_height_back - cylinder_rotated_translate_z])
 		rotate([-top_base_angle, 0, 0])
 		translate([0, top_base_new_length + cylinder_bizarre_size, cylinder_radius])
 		rotate([90, 0, 0])
-			%cylinder(h = top_base_new_length + cylinder_bizarre_size, r = cylinder_radius, center=false);
+			*cylinder(h = top_base_new_length + cylinder_bizarre_size, r = cylinder_radius, center=false);
 //		translate([0, 0, top_base_height_back])
 //		rotate([-top_base_angle, 0, 0])
 //		translate([bottom_base_width/2 - top_base_width/2, 0, 0])
@@ -65,7 +65,7 @@ module key_shape() {
 			
 
 
-	}
+	//}
 }
 
 module connector() {
@@ -127,8 +127,16 @@ module key() {
 
 key();
 
-//hypotenuse = pow(pow(10, 2) + pow(10, 2), 0.5);
-
-//translate([0, 1, 0]) rotate([90, 0, 0]) linear_extrude(height=2) polygon([[0,0], [10, 0], [0,10]]);
-
-//translate([0, 0, 0]) rotate([0, 0, 0]) translate([0, 0, 10]) cube([hypotenuse, 2, 10]);
+//insert_part = 1;
+//move_part = insert_part/tan(base_angle);
+//echo(move_part);
+//
+//difference() {
+//translate([0, 1, 0])
+//rotate([90, 0, 0]) 
+//linear_extrude(height=2) 
+//	polygon([[0,0], [bottom_base_width, 0], [bottom_base_width, top_base_height_back], [bottom_base_length-top_base_length, top_base_height_front]]);
+//
+//	translate([0, -1, 0])
+//		%cube([top_base_length / cos(top_base_angle) + 5, 2, 15]);
+//}
