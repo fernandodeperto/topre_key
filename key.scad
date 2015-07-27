@@ -9,16 +9,15 @@ bottom_base_width = 18.10;
 bottom_base_angle = 69.78;
 
 top_base_height_back = 9.39;
-top_base_height_front = 9.39;
+top_base_height_front = 8.39;
 top_base_width = 12.37;
 
-//TODO Fix this
 top_base_extrusion_height = .001;
 bottom_base_extrusion_height = .5;
 
-key_thickness = 1.2;
+key_thickness = 1.4;
 
-cylinder_dish_radius = 0;
+cylinder_dish_radius = 80;
 
 connector_dimensions = [4.1, 1.35];
 connector_radius = 2.77;
@@ -39,6 +38,17 @@ key_scale = (bottom_base_width - 2 * key_thickness) / bottom_base_width;
 dish_translate_distance = (cylinder_dish_radius != 0) ? sagitta(cylinder_dish_radius, top_base_width) : 0;
 rotated_cylinder_translate = dish_translate_distance/tan(bottom_base_angle-top_base_angle);
 
+internal_base_difference = key_thickness/sin(bottom_base_angle);
+
+internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
+internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
+
+internal_top_base_rotated_difference = (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
+
+internal_top_base_width = top_base_width - 2 * internal_base_difference + 2 * internal_top_base_rotated_difference;
+internal_top_base_length = top_base_length - key_thickness - internal_base_difference + 2 * internal_top_base_rotated_difference;
+internal_top_base_rotated_length = top_base_rotated_length - key_thickness - internal_base_difference + internal_top_base_rotated_difference;
+
 function sagitta(radius, chord) = radius - pow(pow(radius, 2) - pow(chord/2, 2), 0.5);
 
 module base(width, length, extrusion) {
@@ -51,14 +61,6 @@ module base(width, length, extrusion) {
 }
 
 module key_shape() {
-	internal_base_difference = key_thickness/sin(bottom_base_angle);
-	internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
-	internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
-	internal_top_base_width = top_base_width - 2 * internal_base_difference + 2 * (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
-	internal_top_base_length = top_base_length - key_thickness - internal_base_difference + 2 * (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
-
-	internal_top_base_rotated_length = top_base_rotated_length - key_thickness - internal_base_difference + (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
-
 	difference() {
 		hull() {
 			base(bottom_base_width, bottom_base_length, bottom_base_extrusion_height);
@@ -76,12 +78,20 @@ module key_shape() {
 			rotate([-top_base_angle, 0, 0])
 				base(internal_top_base_width, internal_top_base_rotated_length, top_base_extrusion_height);
 		}
+
+		if (cylinder_dish_radius != 0) {
+			translate([bottom_base_width/2, 0, top_base_height_back])
+			rotate([-top_base_angle, 0, 0])
+			translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
+			rotate([90,0,0])
+				cylinder(h=top_base_rotated_length + rotated_cylinder_translate, r=cylinder_dish_radius);
+		}
 	}
 }
 
 module connector() {
 	difference() {
-		cylinder(h = top_base_height_back - connector_height, r = connector_radius);
+		cylinder(h = internal_top_base_height_back - connector_height, r = connector_radius);
 
 		translate([-connector_dimensions[0]/2, -connector_dimensions[1]/2, 0])
 			cube([connector_dimensions[0], connector_dimensions[1], top_base_height_back - connector_height], false);
@@ -90,18 +100,10 @@ module connector() {
 		translate([-connector_dimensions[0]/2, -connector_dimensions[1]/2, 0])
 			cube([connector_dimensions[0], connector_dimensions[1], top_base_height_back - connector_height], false);
 
-		translate([-top_base_width/2, -bottom_base_length/2, top_base_height_back - connector_height])
+		translate([-internal_top_base_width/2, -internal_bottom_base_length/2, internal_top_base_height_back - connector_height])
 		rotate([-top_base_angle, 0])
-			cube([top_base_width, top_base_rotated_length, top_base_height_back]);
 
-		// Cylinder dish radius = 0 means no dish
-		if (cylinder_dish_radius != 0) {
-			translate([0, -bottom_base_length/2, top_base_height_back - connector_height])
-			rotate([-top_base_angle, 0, 0])
-			translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
-			rotate([90,0,0])
-				cylinder(h=top_base_rotated_length + rotated_cylinder_translate, r=cylinder_dish_radius);
-		}
+			cube([internal_top_base_width, internal_top_base_rotated_length, internal_top_base_height_back]);
 	}
 }
 
@@ -126,21 +128,10 @@ module support() {
 }
 
 module key() {
-	difference() {
-		key_shape();
-
-		// Cylinder dish radius = 0 means no dish
-//		if (cylinder_dish_radius != 0) {
-//			translate([bottom_base_width/2, 0, top_base_height_back])
-//			rotate([-top_base_angle, 0, 0])
-//			translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
-//			rotate([90,0,0])
-//				cylinder(h=top_base_rotated_length + rotated_cylinder_translate, r=cylinder_dish_radius);
-//		}
-	}
+	key_shape();
 
 	translate([bottom_base_width/2, bottom_base_width/2, connector_height])
-		*connector();
+		connector();
 
 	translate([bottom_base_width/2, bottom_base_width/2, top_base_height_back - support_height - dish_translate_distance])
 		*support();
