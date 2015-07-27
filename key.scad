@@ -16,7 +16,7 @@ top_base_width = 12.37;
 top_base_extrusion_height = .001;
 bottom_base_extrusion_height = .5;
 
-key_thickness = 1;
+key_thickness = 1.2;
 
 cylinder_dish_radius = 0;
 
@@ -26,6 +26,8 @@ connector_height = 2;
 
 support_height = 1.5;
 support_depth = 0.5;
+
+internal_top_base_height_back = 9.39;
 
 // Calculated stuff
 top_base_length = bottom_base_length - top_base_height_front/tan(bottom_base_angle);
@@ -49,22 +51,30 @@ module base(width, length, extrusion) {
 }
 
 module key_shape() {
+	internal_base_difference = key_thickness/sin(bottom_base_angle);
+	internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
+	internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
+	internal_top_base_width = top_base_width - 2 * internal_base_difference;
+	internal_top_base_length = top_base_length - key_thickness - internal_base_difference;
+	internal_top_base_rotated_length = top_base_length - key_thickness - internal_base_difference;
+
+
 	difference() {
-		hull() {
-			base(bottom_base_length, bottom_base_length, bottom_base_extrusion_height);
+		%hull() {
+			base(bottom_base_width, bottom_base_length, bottom_base_extrusion_height);
 
 			translate([(bottom_base_width-top_base_width)/2, 0, top_base_height_back - top_base_extrusion_height])
 			rotate([-top_base_angle, 0, 0])
 				base(top_base_width, top_base_rotated_length, top_base_extrusion_height);
 		}
 
-		// Cylinder dish radius = 0 means no dish
-		if (cylinder_dish_radius != 0) {
-			translate([bottom_base_width/2, 0, top_base_height_back])
+		hull() {
+			translate([(bottom_base_width - internal_bottom_base_width)/2, (bottom_base_length - internal_bottom_base_length)/2, 0])
+				base(internal_bottom_base_width, internal_bottom_base_length, bottom_base_extrusion_height);
+
+			translate([(bottom_base_width-top_base_width)/2 + (top_base_width-internal_top_base_width)/2, key_thickness, internal_top_base_height_back - top_base_extrusion_height])
 			rotate([-top_base_angle, 0, 0])
-			translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
-			rotate([90,0,0])
-				cylinder(h=top_base_rotated_length + rotated_cylinder_translate, r=cylinder_dish_radius);
+				base(internal_top_base_width, internal_top_base_rotated_length, top_base_extrusion_height);
 		}
 	}
 }
@@ -119,13 +129,18 @@ module key() {
 	difference() {
 		key_shape();
 
-		translate([key_thickness, key_thickness, 0])
-		scale(key_scale)
-			key_shape();
+		// Cylinder dish radius = 0 means no dish
+//		if (cylinder_dish_radius != 0) {
+//			translate([bottom_base_width/2, 0, top_base_height_back])
+//			rotate([-top_base_angle, 0, 0])
+//			translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
+//			rotate([90,0,0])
+//				cylinder(h=top_base_rotated_length + rotated_cylinder_translate, r=cylinder_dish_radius);
+//		}
 	}
 
 	translate([bottom_base_width/2, bottom_base_width/2, connector_height])
-		#connector();
+		*connector();
 
 	translate([bottom_base_width/2, bottom_base_width/2, top_base_height_back - support_height - dish_translate_distance])
 		*support();
