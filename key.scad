@@ -1,4 +1,6 @@
-$fn = 360;
+ $fn = 360;
+
+//TODO put some text on the bottom of the keycap, like version
 
 base_radius = 1.5;
 
@@ -10,11 +12,13 @@ top_base_height_back = 9.39;
 top_base_height_front = 9.39;
 top_base_width = 12.37;
 
-default_base_extrusion_height = .001;
+//TODO Fix this
+top_base_extrusion_height = .001;
+bottom_base_extrusion_height = .5;
 
 key_thickness = 1;
 
-cylinder_dish_radius = 40;
+cylinder_dish_radius = 0;
 
 connector_dimensions = [4.1, 1.35];
 connector_radius = 2.77;
@@ -35,25 +39,25 @@ rotated_cylinder_translate = dish_translate_distance/tan(bottom_base_angle-top_b
 
 function sagitta(radius, chord) = radius - pow(pow(radius, 2) - pow(chord/2, 2), 0.5);
 
-module base(width, length) {
+module base(width, length, extrusion) {
 		minkowski() {
-			cube([width - 2 * base_radius, length - 2 * base_radius, default_base_extrusion_height]);
+			cube([width - 2 * base_radius, length - 2 * base_radius, extrusion/2]);
 
 			translate([base_radius, base_radius, 0]) 
-				cylinder(h=default_base_extrusion_height, r=base_radius);
+				cylinder(h=extrusion/2, r=base_radius);
 		}
 }
 
 module key_shape() {
 	difference() {
 		hull() {
-			base(bottom_base_length, bottom_base_length);
-			
-			translate([(bottom_base_width-top_base_width)/2, 0, top_base_height_back - default_base_extrusion_height])
+			base(bottom_base_length, bottom_base_length, bottom_base_extrusion_height);
+
+			translate([(bottom_base_width-top_base_width)/2, 0, top_base_height_back - top_base_extrusion_height])
 			rotate([-top_base_angle, 0, 0])
-				base(top_base_width, top_base_rotated_length);
+				base(top_base_width, top_base_rotated_length, top_base_extrusion_height);
 		}
-		
+
 		// Cylinder dish radius = 0 means no dish
 		if (cylinder_dish_radius != 0) {
 			translate([bottom_base_width/2, 0, top_base_height_back])
@@ -68,14 +72,14 @@ module key_shape() {
 module connector() {
 	difference() {
 		cylinder(h = top_base_height_back - connector_height, r = connector_radius);
-        
+
 		translate([-connector_dimensions[0]/2, -connector_dimensions[1]/2, 0])
 			cube([connector_dimensions[0], connector_dimensions[1], top_base_height_back - connector_height], false);
-        
+
 		rotate([0, 0, 90])
 		translate([-connector_dimensions[0]/2, -connector_dimensions[1]/2, 0])
 			cube([connector_dimensions[0], connector_dimensions[1], top_base_height_back - connector_height], false);
-		
+
 		translate([-top_base_width/2, -bottom_base_length/2, top_base_height_back - connector_height])
 		rotate([-top_base_angle, 0])
 			cube([top_base_width, top_base_rotated_length, top_base_height_back]);
@@ -100,13 +104,13 @@ module support() {
 			rotate([90, 0, 0])
 			linear_extrude(height = support_depth)
 				polygon([[0, 0], [top_base_width + 2 * base_difference, 0], [top_base_width + base_difference, support_height], [base_difference, support_height]]);
-				
+
 			translate([-support_depth/2, -(bottom_base_width)/2, 0])
 			rotate([90, 0, 90])
 			linear_extrude(height = support_depth)
 				polygon([[0, 0], [top_base_length + base_difference, 0], [top_base_length, support_height], [0, support_height]]);
 		}
-		
+
 		cylinder(h=support_height, r = connector_radius);
 	}
 }
@@ -114,17 +118,18 @@ module support() {
 module key() {
 	difference() {
 		key_shape();
-		
+
 		translate([key_thickness, key_thickness, 0])
 		scale(key_scale)
 			key_shape();
 	}
-	
+
 	translate([bottom_base_width/2, bottom_base_width/2, connector_height])
-		connector();
-	
+		#connector();
+
 	translate([bottom_base_width/2, bottom_base_width/2, top_base_height_back - support_height - dish_translate_distance])
 		*support();
 }
 
 key();
+//connector_base();
