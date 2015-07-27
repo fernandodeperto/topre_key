@@ -27,7 +27,7 @@ connector_height = 2;
 support_height = 1.5;
 support_depth = 0.5;
 
-internal_top_base_height_back = 9.39;
+internal_top_base_height_back = 8.39;
 
 // Calculated stuff
 top_base_length = bottom_base_length - top_base_height_front/tan(bottom_base_angle);
@@ -54,13 +54,13 @@ module key_shape() {
 	internal_base_difference = key_thickness/sin(bottom_base_angle);
 	internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
 	internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
-	internal_top_base_width = top_base_width - 2 * internal_base_difference;
-	internal_top_base_length = top_base_length - key_thickness - internal_base_difference;
-	internal_top_base_rotated_length = top_base_length - key_thickness - internal_base_difference;
+	internal_top_base_width = top_base_width - 2 * internal_base_difference + 2 * (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
+	internal_top_base_length = top_base_length - key_thickness - internal_base_difference + 2 * (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
 
+	internal_top_base_rotated_length = top_base_rotated_length - key_thickness - internal_base_difference + (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
 
 	difference() {
-		%hull() {
+		hull() {
 			base(bottom_base_width, bottom_base_length, bottom_base_extrusion_height);
 
 			translate([(bottom_base_width-top_base_width)/2, 0, top_base_height_back - top_base_extrusion_height])
