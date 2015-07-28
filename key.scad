@@ -2,6 +2,7 @@
 
 //TODO put some text on the bottom of the keycap, like version
 
+// Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
 
 bottom_base_length = 18.10;
@@ -16,7 +17,6 @@ top_base_extrusion_height = .001;
 bottom_base_extrusion_height = .5;
 
 key_thickness = 1.4;
-
 cylinder_dish_radius = 80;
 
 connector_dimensions = [4.1, 1.35];
@@ -26,7 +26,15 @@ connector_height = 2;
 support_height = 1.5;
 support_depth = 0.5;
 
+// Measurements from Signature Plastics
 dcs_profile_angles = [-6, -1, 3, 7, 16, 16];
+
+// Measurements from Razer keycaps, format: [back, front]
+razer_profile_heights = [];
+
+key_text = "R1";
+text_size = 2;
+text_extrusion_height = 0.1;
 
 // Calculated stuff
 top_base_length = bottom_base_length - top_base_height_front/tan(bottom_base_angle);
@@ -104,7 +112,6 @@ module connector() {
 
 		translate([-internal_top_base_width/2, -internal_bottom_base_length/2, internal_top_base_height_back - connector_height])
 		rotate([-top_base_angle, 0])
-
 			cube([internal_top_base_width, internal_top_base_rotated_length, internal_top_base_height_back]);
 	}
 }
@@ -137,6 +144,14 @@ module key() {
 
 	translate([bottom_base_width/2, bottom_base_width/2, top_base_height_back - support_height - dish_translate_distance])
 		*support();
+
+	translate([0, 0, internal_top_base_height_back])
+	rotate([-top_base_angle, 0, 0])
+	translate([bottom_base_width/2, bottom_base_length/4, 0])
+	translate([0, -text_size/2, 0])
+	rotate([0, 180, 0])
+	linear_extrude(height=text_extrusion_height)
+		text(text=key_text, size=text_size, halign="center");
 }
 
 key();
