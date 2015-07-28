@@ -26,7 +26,7 @@ connector_height = 2;
 support_height = 1.5;
 support_depth = 0.5;
 
-internal_top_base_height_back = 8.39;
+dcs_profile_angles = [-6, -1, 3, 7, 16, 16];
 
 // Calculated stuff
 top_base_length = bottom_base_length - top_base_height_front/tan(bottom_base_angle);
@@ -38,6 +38,8 @@ key_scale = (bottom_base_width - 2 * key_thickness) / bottom_base_width;
 dish_translate_distance = (cylinder_dish_radius != 0) ? sagitta(cylinder_dish_radius, top_base_width) : 0;
 rotated_cylinder_translate = dish_translate_distance/tan(bottom_base_angle-top_base_angle);
 
+// Calculations for the internal walls
+internal_top_base_height_back = top_base_height_back - key_thickness;
 internal_base_difference = key_thickness/sin(bottom_base_angle);
 
 internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
