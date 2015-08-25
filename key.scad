@@ -5,13 +5,13 @@
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
 
-bottom_base_length = 18.10;
-bottom_base_width = 18.10;
+bottom_base_length = 18.8;
+bottom_base_width = 18.8;
 bottom_base_angle = 69.78;
 
-top_base_height_back = 9.39;
-top_base_height_front = 8.39;
-top_base_width = 12.37;
+top_base_height_back = 10.26;
+top_base_height_front = 10.26;
+top_base_width = 14.14;
 
 top_base_extrusion_height = 0.05;
 bottom_base_extrusion_height = 0.25;
@@ -21,8 +21,13 @@ cylinder_dish_radius = 0;
 
 connector_dimensions = [4.1, 1.35];
 connector_radius = 2.77;
-connector_height = 1;
+connector_height = -1.3;
 connector_thickness = 0.72;
+
+// Topre connector
+topre_connector_radius = 4;
+topre_connector_height = -1.3;
+topre_connector_thickness = 1;
 
 support_height = 1.5;
 support_depth = 0.5;
@@ -30,12 +35,9 @@ support_depth = 0.5;
 // Key angles from Signature Plastics
 dcs_profile_angles = [-6, -1, 3, 7, 16, 16];
 
-//TODO Measurements from Razer keycaps, format: [back, front]
-razer_profile_heights = [];
-
-key_text = "M3";
+key_text = "T1";
 text_size = 2;
-text_extrusion_height = 1.2;
+text_extrusion_height = 1.4;
 
 //TODO Implement this part
 keyboard_angle = 0;
@@ -146,6 +148,22 @@ module connector2() {
 	}
 }
 
+module connector_topre() {
+	union() {
+		difference() {
+			cylinder(h=top_base_height_back - topre_connector_height, r = topre_connector_radius);
+			cylinder(h=top_base_height_back - topre_connector_height, r = topre_connector_radius - topre_connector_thickness);
+
+			translate([-topre_connector_thickness/2, -topre_connector_radius, 0])
+				cube([topre_connector_thickness, 2 * topre_connector_radius, top_base_height_back - topre_connector_height]);
+		}
+
+		rotate([0, 0, 90])
+		translate([-topre_connector_thickness/2, -topre_connector_radius, 0])
+			cube([topre_connector_thickness, 2 * topre_connector_radius, top_base_height_back - topre_connector_height]);
+	}
+}
+
 module support() {
 	base_difference = support_height/tan(bottom_base_angle);
 
@@ -170,7 +188,7 @@ module key() {
 	key_shape();
 
 	translate([bottom_base_width/2, bottom_base_width/2, connector_height])
-		connector2();
+		connector_topre();
 
 	translate([bottom_base_width/2, bottom_base_width/2, top_base_height_back - support_height - dish_translate_distance])
 		*support();
@@ -181,7 +199,7 @@ module key() {
 	translate([0, -text_size/2, 0])
 	rotate([0, 180, 0])
 	linear_extrude(height=text_extrusion_height)
-		text(text=key_text, size=text_size, halign="center");
+		*text(text=key_text, size=text_size, halign="center");
 }
 
 //connector2();
