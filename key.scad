@@ -13,15 +13,15 @@ top_base_height_back = 9.39;
 top_base_height_front = 8.39;
 top_base_width = 12.37;
 
-top_base_extrusion_height = .001;
-bottom_base_extrusion_height = .5;
+top_base_extrusion_height = 0.05;
+bottom_base_extrusion_height = 0.25;
 
 key_thickness = 1.2;
 cylinder_dish_radius = 0;
 
 connector_dimensions = [4.1, 1.35];
 connector_radius = 2.77;
-connector_height = 0.5;
+connector_height = 1;
 connector_thickness = 0.72;
 
 support_height = 1.5;
@@ -35,7 +35,7 @@ razer_profile_heights = [];
 
 key_text = "M3";
 text_size = 2;
-text_extrusion_height = 0.1;
+text_extrusion_height = 1.2;
 
 //TODO Implement this part
 keyboard_angle = 0;
