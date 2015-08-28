@@ -7,17 +7,17 @@ base_radius = 1.5;
 
 bottom_base_length = 18.8;
 bottom_base_width = 18.8;
-bottom_base_angle = 69.78;
 
 top_base_height_back = 10.26;
-top_base_height_front = 10.26;
+top_base_height_front = 9.26;
 top_base_width = 14.14;
+top_base_length = 18.8;
 
 top_base_extrusion_height = 0.25;
 bottom_base_extrusion_height = 0.25;
 
 key_thickness = 1.2;
-cylinder_dish_radius = 40;
+cylinder_dish_radius = 0;
 
 // Cherry MX connector
 connector_dimensions = [4.1, 1.35];
@@ -30,18 +30,13 @@ topre_connector_radius = 2.96;
 topre_connector_height = -0.57;
 topre_connector_thickness = 1.24;
 
-// Key angles from Signature Plastics
-dcs_profile_angles = [-6, -1, 3, 7, 16, 16];
-
-key_text = "T1";
-text_size = 2;
-text_extrusion_height = 1.4;
-
 //TODO Implement this part
 keyboard_angle = 0;
 
 // Calculated stuff
-top_base_length = bottom_base_length - top_base_height_front/tan(bottom_base_angle);
+
+//top_base_length = bottom_base_length - top_base_height_front/tan(bottom_base_angle);
+bottom_base_angle = atan(top_base_height_front / (bottom_base_length - top_base_length));
 top_base_angle = atan((top_base_height_back-top_base_height_front)/top_base_length);
 top_base_rotated_length = top_base_length/cos(top_base_angle);
 key_scale = (bottom_base_width - 2 * key_thickness) / bottom_base_width;
@@ -106,6 +101,12 @@ module key_shape() {
 			translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
 			rotate([90,0,0])
 				cylinder(h=top_base_rotated_length + rotated_cylinder_translate, r=cylinder_dish_radius);
+		}
+
+		else {
+			translate([(bottom_base_width - top_base_width)/2, 0, top_base_height_back])
+			rotate([-top_base_angle, 0, 0])
+				cube([top_base_width, top_base_rotated_length, top_base_height_back]);
 		}
 	}
 }
