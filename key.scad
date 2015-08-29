@@ -1,28 +1,18 @@
  $fn = 400;
 
-//TODO put some text on the bottom of the keycap, like version
-
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
 
 key_thickness = 1.2;
-
 top_base_extrusion_height = 0.01;
 bottom_base_extrusion_height = 0.01;
-
-// Cherry MX connector
-connector_dimensions = [4.1, 1.35];
-connector_radius = 2.77;
-connector_height = -1.3;
-connector_thickness = 0.72;
 
 // Topre connector
 topre_connector_radius = 2.96;
 topre_connector_height = -0.57;
 topre_connector_thickness = 1.24;
 
-// Dimensions
-// Fields:
+// Dimension fields:
 // 0: top_base_height_back
 // 1: top_base_height_front
 // 2: top_base_rotated_length
@@ -34,8 +24,6 @@ topre_row_dimensions = [
 	[8, 8.7, 13.74, 11.7], // Row D
 	[7.1, 8.34, 14, 11.9], // Row C
 	[6.7, 10, 13.6, 11.8], // Row B
-	[0], // Row A
-	[11, 11, 13, 11.7], // Debugging
 ];
 
 topre_key_dimensions = [
@@ -94,7 +82,13 @@ module base(width, length, extrusion) {
 		}
 }
 
-module key_shape() {
+module dish_cylinder() {
+	translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
+	rotate([90,0,0])
+		cylinder(h=top_base_rotated_length + rotated_cylinder_translate + back_cylinder_translate, r=cylinder_dish_radius);
+}
+
+module key() {
 	difference() {
 		union() {
 			difference() {
@@ -117,15 +111,13 @@ module key_shape() {
 			}
 
 			translate([bottom_base_width/2, bottom_base_width/2, topre_connector_height])
-				connector_topre();
+				connector();
 		}
 
 		if (cylinder_dish_radius != 0) {
 			translate([bottom_base_width/2, 0, top_base_height_back])
 			rotate([-top_base_angle, 0, 0])
-			translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
-			rotate([90,0,0])
-				cylinder(h=top_base_rotated_length + rotated_cylinder_translate + back_cylinder_translate, r=cylinder_dish_radius);
+				dish_cylinder();
 		}
 
 		else {
@@ -137,45 +129,6 @@ module key_shape() {
 }
 
 module connector() {
-	difference() {
-		cylinder(h = internal_top_base_height_back - connector_height, r = connector_radius);
-
-		translate([-connector_dimensions[0]/2, -connector_dimensions[1]/2, 0])
-			cube([connector_dimensions[0], connector_dimensions[1], top_base_height_back - connector_height], false);
-
-		rotate([0, 0, 90])
-		translate([-connector_dimensions[0]/2, -connector_dimensions[1]/2, 0])
-			cube([connector_dimensions[0], connector_dimensions[1], top_base_height_back - connector_height], false);
-
-		translate([-internal_top_base_width/2, -internal_bottom_base_length/2, internal_top_base_height_back - connector_height])
-		rotate([-top_base_angle, 0])
-			cube([internal_top_base_width, internal_top_base_rotated_length, internal_top_base_height_back]);
-	}
-}
-
-module connector2() {
-	difference() {
-		union() {
-			translate([0, 0, (top_base_height_back - connector_height)/2])
-				cube([connector_dimensions[1] + 2 * connector_thickness, connector_dimensions[0] + 2 * connector_thickness, top_base_height_back - connector_height], true);
-
-			translate([0, 0, (top_base_height_back - connector_height)/2])
-			rotate([0, 0, 90])
-				cube([connector_dimensions[1] + 2 * connector_thickness, connector_dimensions[0] + 2 * connector_thickness, top_base_height_back - connector_height], true);
-		}
-
-		union() {
-			translate([0, 0, (top_base_height_back - connector_height)/2])
-				cube([connector_dimensions[1], connector_dimensions[0], top_base_height_back - connector_height], true);
-
-			translate([0, 0, (top_base_height_back - connector_height)/2])
-			rotate([0, 0, 90])
-				cube([connector_dimensions[1], connector_dimensions[0], top_base_height_back - connector_height], true);
-		}
-	}
-}
-
-module connector_topre() {
 	sagitta_difference = sagitta(topre_connector_radius, topre_connector_thickness);
 
 	union() {
@@ -192,11 +145,4 @@ module connector_topre() {
 	}
 }
 
-module key() {
-	key_shape();
-
-	translate([bottom_base_width/2, bottom_base_width/2, topre_connector_height])
-		connector_topre();
-}
-
-key_shape();
+key();
