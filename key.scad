@@ -45,7 +45,7 @@ topre_key_dimensions = [
 	18, // Bottom base width
 ];
 
-key_row_dimensions = topre_row_dimensions[3];
+key_row_dimensions = topre_row_dimensions[0];
 key_dimensions = topre_key_dimensions;
 
 top_base_height_back = key_row_dimensions[0];
@@ -69,6 +69,7 @@ bottom_base_angle = atan(top_base_height_front / (bottom_base_length - top_base_
 // No dish translate distance if no dish is being used
 dish_translate_distance = (cylinder_dish_radius != 0) ? sagitta(cylinder_dish_radius, top_base_width) : 0;
 rotated_cylinder_translate = dish_translate_distance/tan(bottom_base_angle-top_base_angle);
+back_cylinder_translate = (top_base_angle < 0) ? dish_translate_distance * tan(-top_base_angle) : 0;
 
 // Calculations for the internal walls
 internal_top_base_height_back = top_base_height_back - key_thickness;
@@ -124,7 +125,7 @@ module key_shape() {
 			rotate([-top_base_angle, 0, 0])
 			translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - dish_translate_distance])
 			rotate([90,0,0])
-				cylinder(h=top_base_rotated_length + rotated_cylinder_translate, r=cylinder_dish_radius);
+				cylinder(h=top_base_rotated_length + rotated_cylinder_translate + back_cylinder_translate, r=cylinder_dish_radius);
 		}
 
 		else {
