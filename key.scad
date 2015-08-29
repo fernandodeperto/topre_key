@@ -1,27 +1,14 @@
- $fn = 200;
+ $fn = 400;
 
 //TODO put some text on the bottom of the keycap, like version
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
 
-bottom_base_length = 18.8;
-bottom_base_width = 18.8;
-
-top_base_height_back = 10;
-// Valor original: 9.8
-top_base_height_front = 9;
-top_base_sagitta = 0.3;
-top_base_width = 11.5;
-top_base_rotated_length = 13.4;
-
-//cylinder_dish_radius = 0;
-cylinder_dish_radius = cylinder_radius(top_base_width, top_base_sagitta);
-
-top_base_extrusion_height = 0.25;
-bottom_base_extrusion_height = 1.2;
-
 key_thickness = 1.2;
+
+top_base_extrusion_height = 0.01;
+bottom_base_extrusion_height = 0.01;
 
 // Cherry MX connector
 connector_dimensions = [4.1, 1.35];
@@ -34,17 +21,50 @@ topre_connector_radius = 2.96;
 topre_connector_height = -0.57;
 topre_connector_thickness = 1.24;
 
-// Topre key dimensions for each row
-//TODO
+// Dimensions
+// Fields:
+// 0: top_base_height_back
+// 1: top_base_height_front
+// 2: top_base_rotated_length
+// 3: top_base_width
 
-//TODO Implement this part
-keyboard_angle = 0;
+// Topre dimensions
+topre_row_dimensions = [
+	[10.4, 10.2, 13.7, 11.5], // Row E
+	[8, 8.7, 13.74, 11.7], // Row D
+	[7.1, 8.34, 14, 11.9], // Row C
+	[6.7, 10, 13.6, 11.8], // Row B
+	[0], // Row A
+	[11, 11, 13, 11.7], // Debugging
+];
+
+topre_key_dimensions = [
+	0.3, // Top base sagitta
+	0, // Cylinder dish radius
+	18, // Bottom base length
+	18, // Bottom base width
+];
+
+key_row_dimensions = topre_row_dimensions[3];
+key_dimensions = topre_key_dimensions;
+
+top_base_height_back = key_row_dimensions[0];
+top_base_height_front = key_row_dimensions[1];
+top_base_rotated_length = key_row_dimensions[2];
+top_base_width = key_row_dimensions[3];
+top_base_sagitta = key_dimensions[0];
+bottom_base_length = key_dimensions[2];
+bottom_base_width = key_dimensions[3];
+
+//cylinder_dish_radius = 0;
+cylinder_dish_radius = cylinder_radius(top_base_width, top_base_sagitta);
 
 // Calculated stuff
-top_base_length = pow(pow(top_base_rotated_length, 2) - pow(top_base_sagitta, 2), 0.5);
-//top_base_rotated_length = top_base_length/cos(top_base_angle);
-bottom_base_angle = atan(top_base_height_front / (bottom_base_length - top_base_length));
+
+top_base_length = pow(pow(top_base_rotated_length, 2) - pow(top_base_height_back - top_base_height_front, 2), 0.5);
 top_base_angle = atan((top_base_height_back-top_base_height_front)/top_base_length);
+bottom_base_angle = atan(top_base_height_front / (bottom_base_length - top_base_length));
+//top_base_rotated_length = top_base_length/cos(top_base_angle);
 
 // No dish translate distance if no dish is being used
 dish_translate_distance = (cylinder_dish_radius != 0) ? sagitta(cylinder_dish_radius, top_base_width) : 0;
