@@ -8,16 +8,20 @@ base_radius = 1.5;
 bottom_base_length = 18.8;
 bottom_base_width = 18.8;
 
-top_base_height_back = 10.26;
-top_base_height_front = 9.26;
-top_base_width = 14.14;
-top_base_length = 18.8;
+top_base_height_back = 10;
+// Valor original: 9.8
+top_base_height_front = 9;
+top_base_sagitta = 0.3;
+top_base_width = 11.5;
+top_base_rotated_length = 13.4;
+
+//cylinder_dish_radius = 0;
+cylinder_dish_radius = cylinder_radius(top_base_width, top_base_sagitta);
 
 top_base_extrusion_height = 0.25;
-bottom_base_extrusion_height = 0.25;
+bottom_base_extrusion_height = 1.2;
 
 key_thickness = 1.2;
-cylinder_dish_radius = 0;
 
 // Cherry MX connector
 connector_dimensions = [4.1, 1.35];
@@ -30,16 +34,17 @@ topre_connector_radius = 2.96;
 topre_connector_height = -0.57;
 topre_connector_thickness = 1.24;
 
+// Topre key dimensions for each row
+//TODO
+
 //TODO Implement this part
 keyboard_angle = 0;
 
 // Calculated stuff
-
-//top_base_length = bottom_base_length - top_base_height_front/tan(bottom_base_angle);
+top_base_length = pow(pow(top_base_rotated_length, 2) - pow(top_base_sagitta, 2), 0.5);
+//top_base_rotated_length = top_base_length/cos(top_base_angle);
 bottom_base_angle = atan(top_base_height_front / (bottom_base_length - top_base_length));
 top_base_angle = atan((top_base_height_back-top_base_height_front)/top_base_length);
-top_base_rotated_length = top_base_length/cos(top_base_angle);
-key_scale = (bottom_base_width - 2 * key_thickness) / bottom_base_width;
 
 // No dish translate distance if no dish is being used
 dish_translate_distance = (cylinder_dish_radius != 0) ? sagitta(cylinder_dish_radius, top_base_width) : 0;
@@ -48,17 +53,16 @@ rotated_cylinder_translate = dish_translate_distance/tan(bottom_base_angle-top_b
 // Calculations for the internal walls
 internal_top_base_height_back = top_base_height_back - key_thickness;
 internal_base_difference = key_thickness/sin(bottom_base_angle);
-
 internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
 internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
-
 internal_top_base_rotated_difference = (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
-
 internal_top_base_width = top_base_width - 2 * internal_base_difference + 2 * internal_top_base_rotated_difference;
 internal_top_base_length = top_base_length - key_thickness - internal_base_difference + 2 * internal_top_base_rotated_difference;
 internal_top_base_rotated_length = top_base_rotated_length - key_thickness - internal_base_difference + internal_top_base_rotated_difference;
 
 function sagitta(radius, chord) = radius - pow(pow(radius, 2) - pow(chord/2, 2), 0.5);
+function central_chord(chord, sagitta) = pow(chord/2, 2)/sagitta;
+function cylinder_radius(chord, sagitta) = (central_chord(chord, sagitta) + sagitta)/2;
 
 module base(width, length, extrusion) {
 		minkowski() {
