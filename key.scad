@@ -53,11 +53,11 @@ bottom_base_length = key_dimensions[2];
 bottom_base_width = key_dimensions[3];
 bottom_base_angle = key_dimensions[4];
 
-// Calculated stuff
+// Calculations for the top base
+top_base_length = (bottom_base_length * tan(bottom_base_angle) - top_base_height_back)/(tan(bottom_base_angle) - tan(top_base_angle));
+top_base_height_front = top_base_height_back - top_base_length * tan(top_base_angle);
+top_base_rotated_length = top_base_length/cos(top_base_angle);
 cylinder_dish_radius = cylinder_radius(top_base_width, top_base_sagitta);
-top_base_length = pow(pow(top_base_rotated_length, 2) - pow(top_base_height_back - top_base_height_front, 2), 0.5);
-top_base_angle = atan((top_base_height_back-top_base_height_front)/top_base_length);
-bottom_base_angle = atan(top_base_height_front / (bottom_base_length - top_base_length));
 rotated_cylinder_translate = top_base_sagitta/tan(bottom_base_angle-top_base_angle);
 back_cylinder_translate = (top_base_angle < 0) ? top_base_sagitta * tan(-top_base_angle) : 0;
 
