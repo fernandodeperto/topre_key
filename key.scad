@@ -11,9 +11,9 @@ top_base_extrusion_height = 0.01;
 bottom_base_extrusion_height = 0.01;
 
 // Connector dimensions
-connector_radius = 2.94;
+connector_radius = 2.85;
 connector_height = -0.57;
-connector_thickness = 1.2;
+connector_thickness = 1;
 connector_support_height = 4;
 connector_middle_space = 1.5;
 
