@@ -5,6 +5,9 @@ $fn = 100;
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
 
+// Angle measured on the HHKB
+keyboard_angle = 7.3;
+
 // Basic key characteristics
 key_thickness = 1.2;
 top_base_extrusion_height = 0.01;
