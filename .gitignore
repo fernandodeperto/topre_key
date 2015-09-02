@@ -1,2 +1,4 @@
 *.stl
+*.gcode
+*.x3g
 .DS_Store
