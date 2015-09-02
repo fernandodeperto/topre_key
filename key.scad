@@ -1,6 +1,6 @@
 // Render precision
 // Set this to a small value for fast renders
- $fn = 100;
+$fn = 100;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
@@ -12,7 +12,7 @@ bottom_base_extrusion_height = 0.01;
 
 // Connector dimensions
 connector_radius = 2.85;
-connector_height = -0.57;
+connector_height = -1.14;
 connector_thickness = 1;
 connector_support_height = 4;
 connector_middle_space = 1.5;
@@ -25,30 +25,33 @@ connector_middle_space = 1.5;
 
 // Topre dimensions
 row_dimensions = [
-	[10.4, 10, 13.7, 11.5], // Row E
-	[8, 8.7, 13.74, 11.7], // Row D
-	[7.1, 8.34, 14, 11.9], // Row C
-	[6.7, 10, 13.6, 11.8], // Row B
+	[10.3, 1], // Row E
+	[8, -4], // Row D
+	[7, -6], // Row C
+	[6.7, -14], // Row B
+	[6.7, -14], // Row A
 ];
 
 // Dimensions that are relevant to all rows
 key_dimensions = [
-	0.5, // Top base sagitta
-	0, // Cylinder dish radius
+	0.6, // Top base sagitta
+	11.5, // Top base width
 	18, // Bottom base length
 	18, // Bottom base width
+	66, // Bottom base angle
 ];
 
 // Chosen row
 key_row_dimensions = row_dimensions[0];
 
 top_base_height_back = key_row_dimensions[0];
-top_base_height_front = key_row_dimensions[1];
-top_base_rotated_length = key_row_dimensions[2];
-top_base_width = key_row_dimensions[3];
+top_base_angle = key_row_dimensions[1];
+
 top_base_sagitta = key_dimensions[0];
+top_base_width = key_dimensions[1];
 bottom_base_length = key_dimensions[2];
 bottom_base_width = key_dimensions[3];
+bottom_base_angle = key_dimensions[4];
 
 // Calculated stuff
 cylinder_dish_radius = cylinder_radius(top_base_width, top_base_sagitta);
@@ -144,11 +147,8 @@ module connector() {
 			cylinder(h=top_base_height_back - connector_height, r = connector_radius - connector_thickness);
 
 			translate([-connector_middle_space/2, -connector_radius, 0])
-				cube([connector_middle_space, 2 * connector_radius, top_base_height_back - connector_height]);
+				cube([connector_middle_space, 2 * connector_radius, top_base_height_back - connector_height - connector_support_height]);
 		}
-
-		translate([-connector_radius + sagitta_difference, -connector_thickness/2, top_base_height_back - connector_height - connector_support_height])
-			cube([2 * connector_radius - 2 * sagitta_difference, connector_thickness, connector_support_height]);
 	}
 }
 
