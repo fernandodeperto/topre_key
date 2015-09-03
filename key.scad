@@ -28,16 +28,16 @@ connector_middle_space = 1.5;
 
 // Topre dimensions
 row_dimensions = [
-	[10.3, 1], // Row E
-	[8, -4], // Row D
-	[7, -6], // Row C
-	[6.7, -14], // Row B
-	[6.7, -14], // Row A
+	[10.3, 1], // Row E (default: [10.3, 1])
+	[8, -4], // Row D (default: [8, -4])
+	[7, -6], // Row C (default: [7, -6])
+	[6.7, -14], // Row B (default: [6.7, -14])
+	[6.7, -14], // Row A (default: [6.7, -14])
 ];
 
 // Dimensions that are relevant to all rows
 key_dimensions = [
-	0.6, // Top base sagitta
+	0.6, // Top base sagitta (default: 0.6)
 	11.5, // Top base width
 	18, // Bottom base length
 	18, // Bottom base width
@@ -45,7 +45,7 @@ key_dimensions = [
 ];
 
 // Chosen row
-key_row_dimensions = row_dimensions[0];
+key_row_dimensions = row_dimensions[1];
 
 top_base_height_back = key_row_dimensions[0];
 top_base_angle = key_row_dimensions[1];
@@ -155,4 +155,13 @@ module connector() {
 	}
 }
 
+module connector_test() {
+	translate([0, 0, top_base_height_back - connector_height])
+		base(top_base_width, top_base_rotated_length, key_thickness);
+
+	translate([top_base_width/2, top_base_length/2, 0])
+		connector();
+}
+
+//connector_test();
 key();
