@@ -1,6 +1,6 @@
 // Render precision
 // Set this to a small value for fast renders
-$fn = 400;
+$fn = 700;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
@@ -9,7 +9,7 @@ base_radius = 1.5;
 keyboard_angle = 7.3;
 
 // Basic key characteristics
-key_thickness = 1.2;
+key_thickness = 1.4;
 top_base_extrusion_height = 0.01;
 bottom_base_extrusion_height = 0.01;
 
@@ -18,10 +18,12 @@ key_size = 1;
 
 // Connector dimensions
 connector_radius = 2.85;
-connector_height = -1.14;
+connector_height = -1.35;
 connector_thickness = 1;
 connector_support_height = 4;
 connector_middle_space = 1.5;
+
+//11.6
 
 // Dimension fields:
 // 0: top_base_height_back
@@ -31,7 +33,7 @@ connector_middle_space = 1.5;
 
 // Topre dimensions
 row_dimensions = [
-	[10.3, 1], // Row E (default: [10.3, 1])
+	[10.4, 1], // Row E (default: [10.3, 1])
 	[8, -4], // Row D (default: [8, -4])
 	[7, -6], // Row C (default: [7, -6])
 	[6.7, -14], // Row B (default: [6.7, -14])
