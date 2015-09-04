@@ -3,7 +3,7 @@ module base(width, length, extrusion) {
 		minkowski() {
 			cube([width - 2 * base_radius, length - 2 * base_radius, extrusion/2]);
 
-			translate([base_radius, base_radius, 0]) 
+			translate([base_radius, base_radius, 0])
 				cylinder(h=extrusion/2, r=base_radius);
 		}
 }
