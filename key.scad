@@ -34,10 +34,10 @@ connector_middle_space = 1.5;
 // Topre dimensions
 row_dimensions = [
 	[10.4, 1], // Row E (default: [10.3, 1])
-	[8, -4], // Row D (default: [8, -4])
+	[8.2, -2], // Row D (default: [8, -4])
 	[7, -6], // Row C (default: [7, -6])
-	[6.7, -14], // Row B (default: [6.7, -14])
-	[6.7, -14], // Row A (default: [6.7, -14])
+	[6.7, -13], // Row B (default: [6.7, -14])
+	[6.7, -13], // Row A (default: [6.7, -14])
 ];
 
 // Dimensions that are relevant to all rows
@@ -55,7 +55,7 @@ apply_key_angle = 1;
 apply_cylindrical_dish = 1;
 
 // Chosen row
-key_row_dimensions = row_dimensions[0];
+key_row_dimensions = row_dimensions[1];
 
 top_base_height_back = key_row_dimensions[0];
 top_base_angle = apply_key_angle ? key_row_dimensions[1] : 0;
@@ -65,6 +65,10 @@ top_base_width = key_dimensions[1] * key_size;
 bottom_base_length = key_dimensions[2];
 bottom_base_width = key_dimensions[3] - key_dimensions[1] + key_dimensions[1] * key_size;
 bottom_base_angle = key_dimensions[4];
+
+// Calculate key angle based on top_base_height_front
+//top_base_height_front = 10.15;
+//top_base_angle = atan((top_base_height_back - top_base_height_front)/(bottom_base_length - top_base_height_back/tan(bottom_base_angle)));
 
 // Calculations for the top base
 top_base_length = (bottom_base_length * tan(bottom_base_angle) - top_base_height_back)/(tan(bottom_base_angle) - tan(top_base_angle));
@@ -176,4 +180,4 @@ module connector_test() {
 //connector_test();
 
 rotate([apply_keyboard_angle ? -keyboard_angle : 0, 0, 0])
-	key();
+	key(0);
