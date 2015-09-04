@@ -1,3 +1,8 @@
+// Functions used to calculate dimensions of the cylindrical dish
+function sagitta(radius, chord) = radius - pow(pow(radius, 2) - pow(chord/2, 2), 0.5);
+function central_chord(chord, sagitta) = pow(chord/2, 2)/sagitta;
+function cylinder_radius(chord, sagitta) = (central_chord(chord, sagitta) + sagitta)/2;
+
 // Generates the bases of the key using the minkowski function
 module base(width, length, extrusion) {
 		minkowski() {
