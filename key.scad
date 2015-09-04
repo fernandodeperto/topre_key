@@ -1,6 +1,6 @@
 // Render precision
 // Set this to a small value for fast renders
-$fn = 100;
+$fn = 400;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
@@ -12,6 +12,9 @@ keyboard_angle = 7.3;
 key_thickness = 1.2;
 top_base_extrusion_height = 0.01;
 bottom_base_extrusion_height = 0.01;
+
+// Key size
+key_size = 1;
 
 // Connector dimensions
 connector_radius = 2.85;
@@ -44,16 +47,21 @@ key_dimensions = [
 	66, // Bottom base angle
 ];
 
+// Some rendering options
+apply_keyboard_angle = 1;
+apply_key_angle = 1;
+apply_cylindrical_dish = 1;
+
 // Chosen row
-key_row_dimensions = row_dimensions[1];
+key_row_dimensions = row_dimensions[0];
 
 top_base_height_back = key_row_dimensions[0];
-top_base_angle = key_row_dimensions[1];
+top_base_angle = apply_key_angle ? key_row_dimensions[1] : 0;
 
-top_base_sagitta = key_dimensions[0];
-top_base_width = key_dimensions[1];
+top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
+top_base_width = key_dimensions[1] * key_size;
 bottom_base_length = key_dimensions[2];
-bottom_base_width = key_dimensions[3];
+bottom_base_width = key_dimensions[3] - key_dimensions[1] + key_dimensions[1] * key_size;
 bottom_base_angle = key_dimensions[4];
 
 // Calculations for the top base
@@ -122,7 +130,7 @@ module key() {
 				}
 			}
 
-			translate([bottom_base_width/2, bottom_base_width/2, connector_height])
+			translate([bottom_base_width/2, bottom_base_length/2, connector_height])
 				connector();
 		}
 
@@ -164,4 +172,6 @@ module connector_test() {
 }
 
 //connector_test();
-key();
+
+rotate([apply_keyboard_angle ? -keyboard_angle : 0, 0, 0])
+	key();
