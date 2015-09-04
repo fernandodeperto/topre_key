@@ -109,14 +109,12 @@ module key(row) {
 	back_cylinder_translate = (top_base_angle < 0) ? top_base_sagitta * tan(-top_base_angle) : 0;
 
 	// Calculations for the internal walls
-	//TODO Simplify this code
 	internal_top_base_height_back = top_base_height_back - key_thickness;
 	internal_base_difference = key_thickness/sin(bottom_base_angle);
 	internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
 	internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
 	internal_top_base_rotated_difference = (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
 	internal_top_base_width = top_base_width - 2 * internal_base_difference + 2 * internal_top_base_rotated_difference;
-	internal_top_base_length = top_base_length - key_thickness - internal_base_difference + 2 * internal_top_base_rotated_difference;
 	internal_top_base_rotated_length = top_base_rotated_length - key_thickness - internal_base_difference + internal_top_base_rotated_difference;
 
 	difference() {
