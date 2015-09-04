@@ -51,7 +51,7 @@ key_dimensions = [
 
 // Symbol
 symbol_path = "dxf/D3.dxf";
-symbol_thickness = 0.5;
+symbol_thickness = 1;
 symbol_spacing = 1.4;
 
 // Some rendering options
