@@ -64,17 +64,18 @@ symbol_files = [
 	"dxf/protoss.dxf",
 	"dxf/terran.dxf",
 	"dxf/zerg.dxf",
+	"dxf/kojima.dxf",
 ];
 
-symbol_path = symbol_files[1];
-symbol_thickness = 1;
+symbol_path = symbol_files[0];
+symbol_thickness = 0.4;
 symbol_spacing = 1.4;
 
 // Some rendering options
 apply_keyboard_angle = 0;
 apply_key_angle = 1;
-apply_cylindrical_dish = 0;
-apply_symbol = 1;
+apply_cylindrical_dish = 1;
+apply_symbol = 0;
 
 // Key dimensions
 top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
