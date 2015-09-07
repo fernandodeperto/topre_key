@@ -33,7 +33,7 @@ connector_middle_space = 1.5;
 
 // Topre dimensions
 row_dimensions = [
-	[10.4, 10], // Row E (default: [10.4, 1])
+	[10.4, 1], // Row E (default: [10.4, 1])
 	[8.2, -2], // Row D (default: [8.2, -2])
 	[7, -6], // Row C (default: [7, -6])
 	[6.7, -13], // Row B (default: [6.7, -13])
@@ -50,15 +50,32 @@ key_dimensions = [
 ];
 
 // Symbol
-symbol_path = "dxf/D3.dxf";
-symbol_thickness = 1;
+symbol_files = [
+	"dxf/deathly_hallows.dxf",
+	"dxf/harry_potter.dxf",
+	"dxf/mockinjay.dxf",
+	"dxf/playstation.dxf",
+	"dxf/jedi_order.dxf",
+	"dxf/rebel_alliance.dxf",
+	"dxf/republic.dxf",
+	"dxf/sith_order.dxf",
+	"dxf/stark.dxf",
+	"dxf/D3.dxf",
+	"dxf/protoss.dxf",
+	"dxf/terran.dxf",
+	"dxf/zerg.dxf",
+	"dxf/kojima.dxf",
+];
+
+symbol_path = symbol_files[0];
+symbol_thickness = 0.4;
 symbol_spacing = 1.4;
 
 // Some rendering options
 apply_keyboard_angle = 0;
 apply_key_angle = 1;
-apply_cylindrical_dish = 0;
-apply_symbol = 1;
+apply_cylindrical_dish = 1;
+apply_symbol = 0;
 
 // Key dimensions
 top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
@@ -67,12 +84,7 @@ bottom_base_length = key_dimensions[2];
 bottom_base_width = key_dimensions[3] - key_dimensions[1] + key_dimensions[1] * key_size;
 bottom_base_angle = key_dimensions[4];
 
-// Functions used to calculate dimensions of the cylindrical dish
-function sagitta(radius, chord) = radius - pow(pow(radius, 2) - pow(chord/2, 2), 0.5);
-function central_chord(chord, sagitta) = pow(chord/2, 2)/sagitta;
-function cylinder_radius(chord, sagitta) = (central_chord(chord, sagitta) + sagitta)/2;
-
 //connector_test();
 
 rotate([apply_keyboard_angle ? -keyboard_angle : 0, 0, 0])
-	key(1);
+	key(0);

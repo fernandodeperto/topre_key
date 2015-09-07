@@ -2,3 +2,4 @@
 *.gcode
 *.x3g
 .DS_Store
+*.swp
