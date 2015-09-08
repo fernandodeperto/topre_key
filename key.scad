@@ -2,7 +2,7 @@ include<modules.scad>;
 
 // Render precision
 // Set this to a small value for fast renders
-$fn = 100;
+$fn = 700;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
@@ -51,31 +51,31 @@ key_dimensions = [
 
 // Symbol
 symbol_files = [
-	"dxf/deathly_hallows.dxf",
-	"dxf/harry_potter.dxf",
-	"dxf/mockinjay.dxf",
-	"dxf/playstation.dxf",
-	"dxf/jedi_order.dxf",
-	"dxf/rebel_alliance.dxf",
-	"dxf/republic.dxf",
-	"dxf/sith_order.dxf",
-	"dxf/stark.dxf",
-	"dxf/D3.dxf",
-	"dxf/protoss.dxf",
-	"dxf/terran.dxf",
-	"dxf/zerg.dxf",
-	"dxf/kojima.dxf",
+	"dxf/deathly_hallows.dxf", // 0
+	"dxf/harry_potter.dxf", // 1
+	"dxf/mockinjay.dxf", // 2
+	"dxf/playstation.dxf", // 3
+	"dxf/jedi_order.dxf", // 4
+	"dxf/rebel_alliance.dxf", // 5
+	"dxf/republic.dxf", // 6
+	"dxf/sith_order.dxf", // 7
+	"dxf/stark.dxf", // 8
+	"dxf/D3.dxf", // 9
+	"dxf/protoss.dxf", // 10
+	"dxf/terran.dxf", // 11
+	"dxf/zerg.dxf", // 12
+	"dxf/kojima.dxf", // 13
 ];
 
-symbol_path = symbol_files[0];
+symbol_path = symbol_files[7];
 symbol_thickness = 0.4;
 symbol_spacing = 1.4;
 
 // Some rendering options
 apply_keyboard_angle = 0;
 apply_key_angle = 1;
-apply_cylindrical_dish = 1;
-apply_symbol = 0;
+apply_cylindrical_dish = 0;
+apply_symbol = 1;
 
 // Key dimensions
 top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
