@@ -83,8 +83,8 @@ top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
 top_base_width = key_dimensions[1] * key_size;
 bottom_base_length = key_dimensions[2];
 bottom_base_width = key_dimensions[3] - key_dimensions[1] + key_dimensions[1] * key_size;
-bottom_base_front_angle = key_dimensions[4];
-bottom_base_back_angle = key_dimensions[5];
+bottom_base_angle_front = key_dimensions[4];
+bottom_base_angle_back = key_dimensions[5];
 
 //connector_test();
 

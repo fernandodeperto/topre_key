@@ -26,22 +26,22 @@ module key(row) {
 	key_row_dimensions = row_dimensions[row];
 	top_base_height_back = key_row_dimensions[0];
 	top_base_angle = apply_key_angle ? key_row_dimensions[1] : 0;
-	top_base_translate = top_base_height_back/tan(bottom_base_back_angle);
+	top_base_translate = top_base_height_back/tan(bottom_base_angle_back);
 
 	// Calculations for the top base
-	top_base_length = (bottom_base_length * tan(bottom_base_front_angle) - top_base_height_back)/(tan(bottom_base_front_angle) - tan(top_base_angle));
+	top_base_length = (bottom_base_length * tan(bottom_base_angle_front) - top_base_height_back)/(tan(bottom_base_angle_front) - tan(top_base_angle));
 	top_base_height_front = top_base_height_back - top_base_length * tan(top_base_angle);
 	top_base_rotated_length = top_base_length/cos(top_base_angle);
 	cylinder_dish_radius = cylinder_radius(top_base_width, top_base_sagitta);
-	rotated_cylinder_translate = top_base_sagitta/tan(bottom_base_front_angle-top_base_angle);
+	rotated_cylinder_translate = top_base_sagitta/tan(bottom_base_angle_front-top_base_angle);
 	back_cylinder_translate = (top_base_angle < 0) ? top_base_sagitta * tan(-top_base_angle) : 0;
 
 	// Calculations for the internal walls
 	internal_top_base_height_back = top_base_height_back - key_thickness;
-	internal_base_difference = key_thickness/sin(bottom_base_front_angle);
+	internal_base_difference = key_thickness/sin(bottom_base_angle_front);
 	internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
 	internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
-	internal_top_base_rotated_difference = (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_front_angle);
+	internal_top_base_rotated_difference = (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle_front);
 	internal_top_base_width = top_base_width - 2 * internal_base_difference + 2 * internal_top_base_rotated_difference;
 	internal_top_base_rotated_length = top_base_rotated_length - key_thickness - internal_base_difference + internal_top_base_rotated_difference;
 
