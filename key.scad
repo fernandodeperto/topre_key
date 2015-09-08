@@ -33,11 +33,11 @@ connector_middle_space = 1.5;
 
 // Topre dimensions
 row_dimensions = [
-	[10.4, 3], // Row E (default: [10.4, 3])
-	[8.2, -2], // Row D (default: [8.2, -2])
-	[7, -6], // Row C (default: [7, -6])
-	[6.7, -13], // Row B (default: [6.7, -13])
-	[6.7, -13], // Row A (default: [6.7, -13])
+	[10.4, 64, 3], // Row E (default: [10.4, 3])
+	[8.2, 60, -2], // Row D (default: [8.2, -2])
+	[7, 58, -6], // Row C (default: [7, -6])
+	[6.7, 60, -13], // Row B (default: [6.7, -13])
+	[6.7, 60, -13], // Row A (default: [6.7, -13])
 ];
 
 // Dimensions that are relevant to all rows
@@ -46,7 +46,6 @@ key_dimensions = [
 	11.5, // Top base width (default: 11.5)
 	18, // Bottom base length (default: 18)
 	18, // Bottom base width (default: 18)
-	64, // Bottom base front angle (default: 64)
 	86, // Bottom base back angle (default: 86)
 ];
 
@@ -76,15 +75,14 @@ symbol_spacing = 1.4;
 apply_keyboard_angle = 0;
 apply_key_angle = 1;
 apply_cylindrical_dish = 0;
-apply_symbol = 1;
+apply_symbol = 0;
 
 // Key dimensions
 top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
 top_base_width = key_dimensions[1] * key_size;
 bottom_base_length = key_dimensions[2];
 bottom_base_width = key_dimensions[3] - key_dimensions[1] + key_dimensions[1] * key_size;
-bottom_base_angle_front = key_dimensions[4];
-bottom_base_angle_back = key_dimensions[5];
+bottom_base_angle_back = key_dimensions[4];
 
 //connector_test();
 

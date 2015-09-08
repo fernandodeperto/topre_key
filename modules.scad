@@ -36,8 +36,9 @@ module key(row) {
 	// Row dimensions
 	key_row_dimensions = row_dimensions[row];
 	top_base_height_back = key_row_dimensions[0];
-	top_base_angle = apply_key_angle ? key_row_dimensions[1] : 0;
+	top_base_angle = apply_key_angle ? key_row_dimensions[2] : 0;
 	top_base_translate = top_base_height_back/tan(bottom_base_angle_back);
+	bottom_base_angle_front = key_row_dimensions[1];
 
 	// Calculations for the top base
 	top_base_length = (bottom_base_length * tan(bottom_base_angle_front) - top_base_height_back)/(tan(bottom_base_angle_front) - tan(top_base_angle));
