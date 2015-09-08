@@ -78,10 +78,9 @@ module key(row) {
 	}
 
 	if (apply_symbol) {
-		color("blue")
 		translate([0, 0, top_base_height_back])
 		rotate([-top_base_angle, 0, 0])
-		translate([bottom_base_width/2, top_base_rotated_length/2, 0])
+		translate([bottom_base_width/2, top_base_rotated_length/2 + top_base_translate, 0])
 			symbol(top_base_rotated_length);
 	}
 }
@@ -119,6 +118,11 @@ module symbol(top_base_rotated_length) {
 	symbol_width = symbol_initial_width * symbol_scale;
 	symbol_length = symbol_initial_length * symbol_scale;
 
+	//color("blue")
+	//translate([-symbol_width/2, -symbol_length/2, 0])
+	//	cube([symbol_width, symbol_length, 0.1]);
+
+	color("orange")
 	translate([symbol_width/2, symbol_length/2, 0])
 	scale([symbol_scale, symbol_scale, 1])
 	rotate([0, 0, 180])
