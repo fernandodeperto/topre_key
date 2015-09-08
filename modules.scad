@@ -26,21 +26,22 @@ module key(row) {
 	key_row_dimensions = row_dimensions[row];
 	top_base_height_back = key_row_dimensions[0];
 	top_base_angle = apply_key_angle ? key_row_dimensions[1] : 0;
+	top_base_translate = top_base_height_back/tan(bottom_base_back_angle);
 
 	// Calculations for the top base
-	top_base_length = (bottom_base_length * tan(bottom_base_angle) - top_base_height_back)/(tan(bottom_base_angle) - tan(top_base_angle));
+	top_base_length = (bottom_base_length * tan(bottom_base_front_angle) - top_base_height_back)/(tan(bottom_base_front_angle) - tan(top_base_angle));
 	top_base_height_front = top_base_height_back - top_base_length * tan(top_base_angle);
 	top_base_rotated_length = top_base_length/cos(top_base_angle);
 	cylinder_dish_radius = cylinder_radius(top_base_width, top_base_sagitta);
-	rotated_cylinder_translate = top_base_sagitta/tan(bottom_base_angle-top_base_angle);
+	rotated_cylinder_translate = top_base_sagitta/tan(bottom_base_front_angle-top_base_angle);
 	back_cylinder_translate = (top_base_angle < 0) ? top_base_sagitta * tan(-top_base_angle) : 0;
 
 	// Calculations for the internal walls
 	internal_top_base_height_back = top_base_height_back - key_thickness;
-	internal_base_difference = key_thickness/sin(bottom_base_angle);
+	internal_base_difference = key_thickness/sin(bottom_base_front_angle);
 	internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
 	internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
-	internal_top_base_rotated_difference = (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
+	internal_top_base_rotated_difference = (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_front_angle);
 	internal_top_base_width = top_base_width - 2 * internal_base_difference + 2 * internal_top_base_rotated_difference;
 	internal_top_base_rotated_length = top_base_rotated_length - key_thickness - internal_base_difference + internal_top_base_rotated_difference;
 
@@ -50,7 +51,7 @@ module key(row) {
 				hull() {
 					base(bottom_base_width, bottom_base_length, bottom_base_extrusion_height);
 
-					translate([(bottom_base_width-top_base_width)/2, 0, top_base_height_back - top_base_extrusion_height])
+					translate([(bottom_base_width-top_base_width)/2, top_base_translate, top_base_height_back - top_base_extrusion_height])
 					rotate([-top_base_angle, 0, 0])
 						base(top_base_width, top_base_rotated_length, top_base_extrusion_height);
 				}
@@ -59,7 +60,7 @@ module key(row) {
 					translate([(bottom_base_width - internal_bottom_base_width)/2, (bottom_base_length - internal_bottom_base_length)/2, 0])
 						base(internal_bottom_base_width, internal_bottom_base_length, bottom_base_extrusion_height);
 
-					translate([(bottom_base_width-top_base_width)/2 + (top_base_width-internal_top_base_width)/2, key_thickness, internal_top_base_height_back - top_base_extrusion_height])
+					translate([(bottom_base_width-top_base_width)/2 + (top_base_width-internal_top_base_width)/2, key_thickness + top_base_translate, internal_top_base_height_back - top_base_extrusion_height])
 					rotate([-top_base_angle, 0, 0])
 						base(internal_top_base_width, internal_top_base_rotated_length, top_base_extrusion_height);
 				}
@@ -70,13 +71,13 @@ module key(row) {
 		}
 
 		if (apply_cylindrical_dish) {
-			translate([bottom_base_width/2, 0, top_base_height_back])
+			translate([bottom_base_width/2, top_base_translate, top_base_height_back])
 			rotate([-top_base_angle, 0, 0])
 				dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylinder_dish_radius, top_base_sagitta, back_cylinder_translate);
 		}
 
 		else {
-			translate([(bottom_base_width - top_base_width)/2, 0, top_base_height_back])
+			translate([(bottom_base_width - top_base_width)/2, top_base_translate , top_base_height_back])
 			rotate([-top_base_angle, 0, 0])
 				cube([top_base_width, top_base_rotated_length, top_base_height_back]);
 		}
