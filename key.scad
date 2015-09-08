@@ -2,7 +2,7 @@ include<modules.scad>;
 
 // Render precision
 // Set this to a small value for fast renders
-$fn = 700;
+$fn = 100;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
@@ -33,7 +33,7 @@ connector_middle_space = 1.5;
 
 // Topre dimensions
 row_dimensions = [
-	[10.4, 2], // Row E (default: [10.4, 1])
+	[10.4, 3], // Row E (default: [10.4, 3])
 	[8.2, -2], // Row D (default: [8.2, -2])
 	[7, -6], // Row C (default: [7, -6])
 	[6.7, -13], // Row B (default: [6.7, -13])
@@ -43,11 +43,11 @@ row_dimensions = [
 // Dimensions that are relevant to all rows
 key_dimensions = [
 	0.6, // Top base sagitta (default: 0.6)
-	11.5, // Top base width
-	18, // Bottom base length
-	18, // Bottom base width
-	68, // Bottom base front angle
-	89, // Bottom base back angle
+	11.5, // Top base width (default: 11.5)
+	18, // Bottom base length (default: 18)
+	18, // Bottom base width (default: 18)
+	64, // Bottom base front angle (default: 64)
+	86, // Bottom base back angle (default: 86)
 ];
 
 // Symbol
@@ -75,8 +75,8 @@ symbol_spacing = 1.4;
 // Some rendering options
 apply_keyboard_angle = 0;
 apply_key_angle = 1;
-apply_cylindrical_dish = 1;
-apply_symbol = 0;
+apply_cylindrical_dish = 0;
+apply_symbol = 1;
 
 // Key dimensions
 top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
