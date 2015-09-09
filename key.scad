@@ -2,7 +2,7 @@ include<modules.scad>;
 
 // Render precision
 // Set this to a small value for fast renders
-$fn = 700;
+$fn = 100;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
@@ -67,7 +67,6 @@ symbol_files = [
 	"dxf/kojima.dxf", // 13
 ];
 
-symbol_path = symbol_files[7];
 symbol_thickness = 0.4;
 symbol_spacing = 1.4;
 
@@ -92,13 +91,8 @@ support_length = 2.5;
 
 //connector_test();
 
-key(0);
-
-translate([bottom_base_width + support_length, 0, 0])
-	key(1);
-
-translate([2 * bottom_base_width + 2 * support_length, 0, 0])
-	key(2);
-
-translate([3 * bottom_base_width + 3 * support_length, 0, 0])
-	key(3);
+keycap_rows = [1, 2, 2, 3];
+for (i = [0:3]) {
+	translate([i * bottom_base_width + i * support_length, 0, 0])
+		key(keycap_rows[i]);
+}

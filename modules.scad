@@ -32,7 +32,7 @@ module key_shape(top_base_translate, top_base_height_back, top_base_angle, top_b
 }
 
 // Basic function that generates the key
-module key(row) {
+module key(row, symbol_number) {
 	// Row dimensions
 	key_row_dimensions = row_dimensions[row];
 	top_base_height_back = key_row_dimensions[0];
@@ -86,7 +86,7 @@ module key(row) {
 		translate([0, 0, top_base_height_back])
 		rotate([-top_base_angle, 0, 0])
 		translate([bottom_base_width/2, top_base_rotated_length/2 + top_base_translate, 0])
-			symbol(top_base_rotated_length);
+			symbol(top_base_rotated_length, symbol_number);
 	}
 
 	if (apply_support) {
@@ -140,7 +140,8 @@ module connector_test() {
 		connector();
 }
 
-module symbol(top_base_rotated_length) {
+module symbol(top_base_rotated_length, symbol_number) {
+	symbol_path = symbol_files[symbol_number];
 	symbol_initial_width = dxf_dim(file=symbol_path, name="total_width");
 	symbol_initial_length = dxf_dim(file=symbol_path, name="total_height");
 
@@ -150,9 +151,11 @@ module symbol(top_base_rotated_length) {
 	symbol_width = symbol_initial_width * symbol_scale;
 	symbol_length = symbol_initial_length * symbol_scale;
 
-	//color("blue")
-	//translate([-symbol_width/2, -symbol_length/2, 0])
-	//	cube([symbol_width, symbol_length, 0.1]);
+	if (DEBUG_SYMBOL) {
+		color("blue")
+		translate([-symbol_width/2, -symbol_length/2, 0])
+			cube([symbol_width, symbol_length, 0.1]);
+	}
 
 	color("orange")
 	translate([symbol_width/2, symbol_length/2, 0])
