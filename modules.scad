@@ -148,12 +148,12 @@ module connector_test() {
 }
 
 module symbol(top_base_rotated_length, symbol_number) {
-	symbol_path = symbol_files[symbol_number];
+	symbol_path = SYMBOL_FILES[symbol_number];
 	symbol_initial_width = dxf_dim(file=symbol_path, name="total_width");
 	symbol_initial_length = dxf_dim(file=symbol_path, name="total_height");
 
-	symbol_width_scale = (top_base_width - symbol_spacing)/symbol_initial_width;
-	symbol_length_scale = (top_base_rotated_length - symbol_spacing)/symbol_initial_length;
+	symbol_width_scale = (top_base_width - SYMBOL_SPACING)/symbol_initial_width;
+	symbol_length_scale = (top_base_rotated_length - SYMBOL_SPACING)/symbol_initial_length;
 	symbol_scale = min(symbol_width_scale, symbol_length_scale);
 	symbol_width = symbol_initial_width * symbol_scale;
 	symbol_length = symbol_initial_length * symbol_scale;
@@ -164,10 +164,10 @@ module symbol(top_base_rotated_length, symbol_number) {
 			cube([symbol_width, symbol_length, 0.1]);
 	}
 
-	color("orange")
+	color("red")
 	translate([symbol_width/2, symbol_length/2, 0])
 	scale([symbol_scale, symbol_scale, 1])
 	rotate([0, 0, 180])
-	linear_extrude(height=symbol_thickness)
+	linear_extrude(height=SYMBOL_THICKNESS)
 		import(file=symbol_path);
 }

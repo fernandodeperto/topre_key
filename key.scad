@@ -1,6 +1,6 @@
 // Render precision
 // Set this to a small value for fast renders
-$fn = 100;
+$fn = 700;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 BASE_RADIUS = 1.5;
@@ -61,12 +61,13 @@ SYMBOL_FILES = [
 
 SYMBOL_THICKNESS = 0.4;
 SYMBOL_SPACING = 1.4;
+DEBUG_SYMBOL = 0;
 
 // Some rendering options
 APPLY_KEYBOARD_ANGLE = 0;
 APPLY_KEY_ANGLE = 1;
-APPLY_CYLINDRICAL_DISH = 1;
-APPLY_SYMBOL = 0;
+APPLY_CYLINDRICAL_DISH = 0;
+APPLY_SYMBOL = 1;
 APPLY_SUPPORT = 0;
 
 // Support
@@ -78,7 +79,9 @@ SUPPORT_LENGTH = 2.5;
 include<modules.scad>;
 
 keycap_rows = [0];
+keycap_symbols = [4];
+
 for (i = [0:len(keycap_rows) - 1]) {
 	translate([i * bottom_base_width + i * SUPPORT_LENGTH, 0, 0])
-		key(keycap_rows[i]);
+		key(keycap_rows[i], keycap_symbols[i]);
 }
