@@ -26,7 +26,7 @@ module key_shape(top_base_translate, top_base_height_back, top_base_angle, top_b
 		base(bottom_base_width, bottom_base_length, bottom_base_extrusion_height);
 
 		translate([(bottom_base_width-top_base_width)/2, top_base_translate, top_base_height_back - top_base_extrusion_height])
-			rotate([-top_base_angle, 0, 0])
+		rotate([-top_base_angle, 0, 0])
 			base(top_base_width, top_base_rotated_length, top_base_extrusion_height);
 	}
 }
@@ -48,7 +48,11 @@ module key(row) {
 	rotated_cylinder_translate = top_base_sagitta/tan(bottom_base_angle_front-top_base_angle);
 	back_cylinder_translate = top_base_sagitta/tan(bottom_base_angle_back+top_base_angle);
 
+	// Scale to generate the internal part of the key
 	key_scale = (bottom_base_width - 2 * key_thickness) / bottom_base_width;
+
+	// Side angle used for the support
+	bottom_base_angle_side = atan(top_base_height_back/((bottom_base_width-top_base_width)/2));
 
 	difference() {
 		union() {
@@ -84,6 +88,33 @@ module key(row) {
 		translate([bottom_base_width/2, top_base_rotated_length/2 + top_base_translate, 0])
 			symbol(top_base_rotated_length);
 	}
+
+	if (apply_support) {
+		translate([bottom_base_width, bottom_base_length/2, 0])
+			support(bottom_base_angle_side);
+
+		translate([0, bottom_base_length/2, 0])
+		rotate([0, 0, 180])
+			support(bottom_base_angle_side);
+
+		translate([bottom_base_width/2, bottom_base_length, 0])
+		rotate([0, 0, 90])
+			support(bottom_base_angle_front);
+
+		translate([bottom_base_width/2, 0, 0])
+		rotate([0, 0, -90])
+			support(bottom_base_angle_back);
+	}
+}
+
+// Generates the support used for CNC machining the key
+module support(bottom_base_angle_side) {
+	support_base_translate = support_height/tan(bottom_base_angle_side);
+
+	translate([-support_base_translate, support_width/2, 0])
+	rotate([90, 0, 0])
+	linear_extrude(height=support_width)
+		polygon([[0, support_height], [support_base_translate, 0], [support_base_translate + support_length, 0], [support_base_translate + support_length, support_height]]);
 }
 
 // Generates the connector for the key

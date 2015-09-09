@@ -2,7 +2,7 @@ include<modules.scad>;
 
 // Render precision
 // Set this to a small value for fast renders
-$fn = 100;
+$fn = 700;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 base_radius = 1.5;
@@ -74,8 +74,9 @@ symbol_spacing = 1.4;
 // Some rendering options
 apply_keyboard_angle = 0;
 apply_key_angle = 1;
-apply_cylindrical_dish = 0;
+apply_cylindrical_dish = 1;
 apply_symbol = 0;
+apply_support = 1;
 
 // Key dimensions
 top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
@@ -84,7 +85,20 @@ bottom_base_length = key_dimensions[2];
 bottom_base_width = key_dimensions[3] - key_dimensions[1] + key_dimensions[1] * key_size;
 bottom_base_angle_back = key_dimensions[4];
 
+// Support
+support_width = 3.5;
+support_height = 3.5;
+support_length = 2.5;
+
 //connector_test();
 
-rotate([apply_keyboard_angle ? -keyboard_angle : 0, 0, 0])
-	key(0);
+key(0);
+
+translate([bottom_base_width + support_length, 0, 0])
+	key(1);
+
+translate([2 * bottom_base_width + 2 * support_length, 0, 0])
+	key(2);
+
+translate([3 * bottom_base_width + 3 * support_length, 0, 0])
+	key(3);
