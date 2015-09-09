@@ -33,41 +33,40 @@ connector_middle_space = 1.5;
 
 // Topre dimensions
 row_dimensions = [
-	[10.4, 1], // Row E (default: [10.4, 1])
-	[8.2, -2], // Row D (default: [8.2, -2])
-	[7, -6], // Row C (default: [7, -6])
-	[6.7, -13], // Row B (default: [6.7, -13])
-	[6.7, -13], // Row A (default: [6.7, -13])
+	[10.4, 64, 3], // Row E (default: [10.4, 3])
+	[8.2, 60, -2], // Row D (default: [8.2, -2])
+	[7, 58, -6], // Row C (default: [7, -6])
+	[6.7, 60, -13], // Row B (default: [6.7, -13])
+	[6.7, 60, -13], // Row A (default: [6.7, -13])
 ];
 
 // Dimensions that are relevant to all rows
 key_dimensions = [
 	0.6, // Top base sagitta (default: 0.6)
-	11.5, // Top base width
-	18, // Bottom base length
-	18, // Bottom base width
-	66, // Bottom base angle
+	11.5, // Top base width (default: 11.5)
+	18, // Bottom base length (default: 18)
+	18, // Bottom base width (default: 18)
+	86, // Bottom base back angle (default: 86)
 ];
 
 // Symbol
 symbol_files = [
-	"dxf/deathly_hallows.dxf",
-	"dxf/harry_potter.dxf",
-	"dxf/mockinjay.dxf",
-	"dxf/playstation.dxf",
-	"dxf/jedi_order.dxf",
-	"dxf/rebel_alliance.dxf",
-	"dxf/republic.dxf",
-	"dxf/sith_order.dxf",
-	"dxf/stark.dxf",
-	"dxf/D3.dxf",
-	"dxf/protoss.dxf",
-	"dxf/terran.dxf",
-	"dxf/zerg.dxf",
-	"dxf/kojima.dxf",
+	"dxf/deathly_hallows.dxf", // 0
+	"dxf/harry_potter.dxf", // 1
+	"dxf/mockinjay.dxf", // 2
+	"dxf/playstation.dxf", // 3
+	"dxf/jedi_order.dxf", // 4
+	"dxf/rebel_alliance.dxf", // 5
+	"dxf/republic.dxf", // 6
+	"dxf/sith_order.dxf", // 7
+	"dxf/stark.dxf", // 8
+	"dxf/D3.dxf", // 9
+	"dxf/protoss.dxf", // 10
+	"dxf/terran.dxf", // 11
+	"dxf/zerg.dxf", // 12
+	"dxf/kojima.dxf", // 13
 ];
 
-symbol_path = symbol_files[0];
 symbol_thickness = 0.4;
 symbol_spacing = 1.4;
 
@@ -76,15 +75,24 @@ apply_keyboard_angle = 0;
 apply_key_angle = 1;
 apply_cylindrical_dish = 1;
 apply_symbol = 0;
+apply_support = 1;
 
 // Key dimensions
 top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
 top_base_width = key_dimensions[1] * key_size;
 bottom_base_length = key_dimensions[2];
 bottom_base_width = key_dimensions[3] - key_dimensions[1] + key_dimensions[1] * key_size;
-bottom_base_angle = key_dimensions[4];
+bottom_base_angle_back = key_dimensions[4];
+
+// Support
+support_width = 3.5;
+support_height = 3.5;
+support_length = 2.5;
 
 //connector_test();
 
-rotate([apply_keyboard_angle ? -keyboard_angle : 0, 0, 0])
-	key(0);
+keycap_rows = [1, 2, 2, 3];
+for (i = [0:len(keycap_rows) - 1]) {
+	translate([i * bottom_base_width + i * support_length, 0, 0])
+		key(keycap_rows[i]);
+}

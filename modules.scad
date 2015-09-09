@@ -20,49 +20,49 @@ module dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylind
 		cylinder(h=top_base_rotated_length + rotated_cylinder_translate + back_cylinder_translate, r=cylinder_dish_radius);
 }
 
+// Basic key shape
+module key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length) {
+	hull() {
+		base(bottom_base_width, bottom_base_length, bottom_base_extrusion_height);
+
+		translate([(bottom_base_width-top_base_width)/2, top_base_translate, top_base_height_back - top_base_extrusion_height])
+		rotate([-top_base_angle, 0, 0])
+			base(top_base_width, top_base_rotated_length, top_base_extrusion_height);
+	}
+}
+
 // Basic function that generates the key
-module key(row) {
+module key(row, symbol_number) {
 	// Row dimensions
 	key_row_dimensions = row_dimensions[row];
 	top_base_height_back = key_row_dimensions[0];
-	top_base_angle = apply_key_angle ? key_row_dimensions[1] : 0;
+	top_base_angle = apply_key_angle ? key_row_dimensions[2] : 0;
+	top_base_translate = top_base_height_back/tan(bottom_base_angle_back);
+	bottom_base_angle_front = key_row_dimensions[1];
 
 	// Calculations for the top base
-	top_base_length = (bottom_base_length * tan(bottom_base_angle) - top_base_height_back)/(tan(bottom_base_angle) - tan(top_base_angle));
+	top_base_length = (bottom_base_length * tan(bottom_base_angle_front) - top_base_height_back)/(tan(bottom_base_angle_front) - tan(top_base_angle));
 	top_base_height_front = top_base_height_back - top_base_length * tan(top_base_angle);
 	top_base_rotated_length = top_base_length/cos(top_base_angle);
 	cylinder_dish_radius = cylinder_radius(top_base_width, top_base_sagitta);
-	rotated_cylinder_translate = top_base_sagitta/tan(bottom_base_angle-top_base_angle);
-	back_cylinder_translate = (top_base_angle < 0) ? top_base_sagitta * tan(-top_base_angle) : 0;
+	rotated_cylinder_translate = top_base_sagitta/tan(bottom_base_angle_front-top_base_angle);
+	back_cylinder_translate = top_base_sagitta/tan(bottom_base_angle_back+top_base_angle);
 
-	// Calculations for the internal walls
-	internal_top_base_height_back = top_base_height_back - key_thickness;
-	internal_base_difference = key_thickness/sin(bottom_base_angle);
-	internal_bottom_base_width = bottom_base_width - 2 * internal_base_difference;
-	internal_bottom_base_length = bottom_base_length - key_thickness - internal_base_difference;
-	internal_top_base_rotated_difference = (top_base_height_back - internal_top_base_height_back)/tan(bottom_base_angle);
-	internal_top_base_width = top_base_width - 2 * internal_base_difference + 2 * internal_top_base_rotated_difference;
-	internal_top_base_rotated_length = top_base_rotated_length - key_thickness - internal_base_difference + internal_top_base_rotated_difference;
+	// Scale to generate the internal part of the key
+	key_scale = (bottom_base_width - 2 * key_thickness) / bottom_base_width;
+
+	// Side angle used for the support
+	bottom_base_angle_side = atan(top_base_height_back/((bottom_base_width-top_base_width)/2));
 
 	difference() {
 		union() {
 			difference() {
-				hull() {
-					base(bottom_base_width, bottom_base_length, bottom_base_extrusion_height);
+				key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length);
 
-					translate([(bottom_base_width-top_base_width)/2, 0, top_base_height_back - top_base_extrusion_height])
-					rotate([-top_base_angle, 0, 0])
-						base(top_base_width, top_base_rotated_length, top_base_extrusion_height);
-				}
+				translate([key_thickness, key_thickness, 0])
+				scale(key_scale)
+					key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length);
 
-				hull() {
-					translate([(bottom_base_width - internal_bottom_base_width)/2, (bottom_base_length - internal_bottom_base_length)/2, 0])
-						base(internal_bottom_base_width, internal_bottom_base_length, bottom_base_extrusion_height);
-
-					translate([(bottom_base_width-top_base_width)/2 + (top_base_width-internal_top_base_width)/2, key_thickness, internal_top_base_height_back - top_base_extrusion_height])
-					rotate([-top_base_angle, 0, 0])
-						base(internal_top_base_width, internal_top_base_rotated_length, top_base_extrusion_height);
-				}
 			}
 
 			translate([bottom_base_width/2, bottom_base_length/2, connector_height])
@@ -70,25 +70,51 @@ module key(row) {
 		}
 
 		if (apply_cylindrical_dish) {
-			translate([bottom_base_width/2, 0, top_base_height_back])
+			translate([bottom_base_width/2, top_base_translate, top_base_height_back])
 			rotate([-top_base_angle, 0, 0])
 				dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylinder_dish_radius, top_base_sagitta, back_cylinder_translate);
 		}
 
 		else {
-			translate([(bottom_base_width - top_base_width)/2, 0, top_base_height_back])
+			translate([(bottom_base_width - top_base_width)/2, top_base_translate , top_base_height_back])
 			rotate([-top_base_angle, 0, 0])
 				cube([top_base_width, top_base_rotated_length, top_base_height_back]);
 		}
 	}
 
 	if (apply_symbol) {
-		color("blue")
 		translate([0, 0, top_base_height_back])
 		rotate([-top_base_angle, 0, 0])
-		translate([bottom_base_width/2, top_base_rotated_length/2, 0])
-			symbol(top_base_rotated_length);
+		translate([bottom_base_width/2, top_base_rotated_length/2 + top_base_translate, 0])
+			symbol(top_base_rotated_length, symbol_number);
 	}
+
+	if (apply_support) {
+		translate([bottom_base_width, bottom_base_length/2, 0])
+			support(bottom_base_angle_side);
+
+		translate([0, bottom_base_length/2, 0])
+		rotate([0, 0, 180])
+			support(bottom_base_angle_side);
+
+		translate([bottom_base_width/2, bottom_base_length, 0])
+		rotate([0, 0, 90])
+			support(bottom_base_angle_front);
+
+		translate([bottom_base_width/2, 0, 0])
+		rotate([0, 0, -90])
+			support(bottom_base_angle_back);
+	}
+}
+
+// Generates the support used for CNC machining the key
+module support(bottom_base_angle_side) {
+	support_base_translate = support_height/tan(bottom_base_angle_side);
+
+	translate([-support_base_translate, support_width/2, 0])
+	rotate([90, 0, 0])
+	linear_extrude(height=support_width)
+		polygon([[0, support_height], [support_base_translate, 0], [support_base_translate + support_length, 0], [support_base_translate + support_length, support_height]]);
 }
 
 // Generates the connector for the key
@@ -114,7 +140,8 @@ module connector_test() {
 		connector();
 }
 
-module symbol(top_base_rotated_length) {
+module symbol(top_base_rotated_length, symbol_number) {
+	symbol_path = symbol_files[symbol_number];
 	symbol_initial_width = dxf_dim(file=symbol_path, name="total_width");
 	symbol_initial_length = dxf_dim(file=symbol_path, name="total_height");
 
@@ -124,6 +151,13 @@ module symbol(top_base_rotated_length) {
 	symbol_width = symbol_initial_width * symbol_scale;
 	symbol_length = symbol_initial_length * symbol_scale;
 
+	if (DEBUG_SYMBOL) {
+		color("blue")
+		translate([-symbol_width/2, -symbol_length/2, 0])
+			cube([symbol_width, symbol_length, 0.1]);
+	}
+
+	color("orange")
 	translate([symbol_width/2, symbol_length/2, 0])
 	scale([symbol_scale, symbol_scale, 1])
 	rotate([0, 0, 180])
