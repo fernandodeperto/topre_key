@@ -92,7 +92,7 @@ support_length = 2.5;
 //connector_test();
 
 keycap_rows = [1, 2, 2, 3];
-for (i = [0:3]) {
+for (i = [0:len(keycap_rows) - 1]) {
 	translate([i * bottom_base_width + i * support_length, 0, 0])
 		key(keycap_rows[i]);
 }
