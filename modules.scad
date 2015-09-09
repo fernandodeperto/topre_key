@@ -1,3 +1,10 @@
+// Key dimensions
+top_base_sagitta = APPLY_CYLINDRICAL_DISH ? KEY_DIMENSIONS[0] : 0;
+top_base_width = KEY_DIMENSIONS[1] * KEY_SIZE;
+bottom_base_length = KEY_DIMENSIONS[2];
+bottom_base_width = KEY_DIMENSIONS[3] - KEY_DIMENSIONS[1] + KEY_DIMENSIONS[1] * KEY_SIZE;
+bottom_base_angle_back = KEY_DIMENSIONS[4];
+
 // Functions used to calculate dimensions of the cylindrical dish
 function sagitta(radius, chord) = radius - pow(pow(radius, 2) - pow(chord/2, 2), 0.5);
 function central_chord(chord, sagitta) = pow(chord/2, 2)/sagitta;
@@ -6,10 +13,10 @@ function cylinder_radius(chord, sagitta) = (central_chord(chord, sagitta) + sagi
 // Generates the bases of the key using the minkowski function
 module base(width, length, extrusion) {
 		minkowski() {
-			cube([width - 2 * base_radius, length - 2 * base_radius, extrusion/2]);
+			cube([width - 2 * BASE_RADIUS, length - 2 * BASE_RADIUS, extrusion/2]);
 
-			translate([base_radius, base_radius, 0])
-				cylinder(h=extrusion/2, r=base_radius);
+			translate([BASE_RADIUS, BASE_RADIUS, 0])
+				cylinder(h=extrusion/2, r=BASE_RADIUS);
 		}
 }
 
@@ -23,22 +30,22 @@ module dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylind
 // Basic key shape
 module key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length) {
 	hull() {
-		base(bottom_base_width, bottom_base_length, bottom_base_extrusion_height);
+		base(bottom_base_width, bottom_base_length, BOTTOM_BASE_EXTRUSION_HEIGHT);
 
-		translate([(bottom_base_width-top_base_width)/2, top_base_translate, top_base_height_back - top_base_extrusion_height])
+		translate([(bottom_base_width-top_base_width)/2, top_base_translate, top_base_height_back - TOP_BASE_EXTRUSION_HEIGHT])
 		rotate([-top_base_angle, 0, 0])
-			base(top_base_width, top_base_rotated_length, top_base_extrusion_height);
+			base(top_base_width, top_base_rotated_length, TOP_BASE_EXTRUSION_HEIGHT);
 	}
 }
 
 // Basic function that generates the key
 module key(row, symbol_number) {
 	// Row dimensions
-	key_row_dimensions = row_dimensions[row];
-	top_base_height_back = key_row_dimensions[0];
-	top_base_angle = apply_key_angle ? key_row_dimensions[2] : 0;
+	KEY_ROW_DIMENSIONS = ROW_DIMENSIONS[row];
+	top_base_height_back = KEY_ROW_DIMENSIONS[0];
+	top_base_angle = APPLY_KEY_ANGLE ? KEY_ROW_DIMENSIONS[2] : 0;
 	top_base_translate = top_base_height_back/tan(bottom_base_angle_back);
-	bottom_base_angle_front = key_row_dimensions[1];
+	bottom_base_angle_front = KEY_ROW_DIMENSIONS[1];
 
 	// Calculations for the top base
 	top_base_length = (bottom_base_length * tan(bottom_base_angle_front) - top_base_height_back)/(tan(bottom_base_angle_front) - tan(top_base_angle));
@@ -49,7 +56,7 @@ module key(row, symbol_number) {
 	back_cylinder_translate = top_base_sagitta/tan(bottom_base_angle_back+top_base_angle);
 
 	// Scale to generate the internal part of the key
-	key_scale = (bottom_base_width - 2 * key_thickness) / bottom_base_width;
+	key_scale = (bottom_base_width - 2 * KEY_THICKNESS) / bottom_base_width;
 
 	// Side angle used for the support
 	bottom_base_angle_side = atan(top_base_height_back/((bottom_base_width-top_base_width)/2));
@@ -59,17 +66,17 @@ module key(row, symbol_number) {
 			difference() {
 				key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length);
 
-				translate([key_thickness, key_thickness, 0])
+				translate([KEY_THICKNESS, KEY_THICKNESS, 0])
 				scale(key_scale)
 					key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length);
 
 			}
 
-			translate([bottom_base_width/2, bottom_base_length/2, connector_height])
+			translate([bottom_base_width/2, bottom_base_length/2, CONNECTOR_HEIGHT])
 				connector(top_base_height_back);
 		}
 
-		if (apply_cylindrical_dish) {
+		if (APPLY_CYLINDRICAL_DISH) {
 			translate([bottom_base_width/2, top_base_translate, top_base_height_back])
 			rotate([-top_base_angle, 0, 0])
 				dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylinder_dish_radius, top_base_sagitta, back_cylinder_translate);
@@ -82,14 +89,14 @@ module key(row, symbol_number) {
 		}
 	}
 
-	if (apply_symbol) {
+	if (APPLY_SYMBOL) {
 		translate([0, 0, top_base_height_back])
 		rotate([-top_base_angle, 0, 0])
 		translate([bottom_base_width/2, top_base_rotated_length/2 + top_base_translate, 0])
 			symbol(top_base_rotated_length, symbol_number);
 	}
 
-	if (apply_support) {
+	if (APPLY_SUPPORT) {
 		translate([bottom_base_width, bottom_base_length/2, 0])
 			support(bottom_base_angle_side);
 
@@ -109,32 +116,32 @@ module key(row, symbol_number) {
 
 // Generates the support used for CNC machining the key
 module support(bottom_base_angle_side) {
-	support_base_translate = support_height/tan(bottom_base_angle_side);
+	support_base_translate = SUPPORT_HEIGHT/tan(bottom_base_angle_side);
 
-	translate([-support_base_translate, support_width/2, 0])
+	translate([-support_base_translate, SUPPORT_WIDTH/2, 0])
 	rotate([90, 0, 0])
-	linear_extrude(height=support_width)
-		polygon([[0, support_height], [support_base_translate, 0], [support_base_translate + support_length, 0], [support_base_translate + support_length, support_height]]);
+	linear_extrude(height=SUPPORT_WIDTH)
+		polygon([[0, SUPPORT_HEIGHT], [support_base_translate, 0], [support_base_translate + SUPPORT_LENGTH, 0], [support_base_translate + SUPPORT_LENGTH, SUPPORT_HEIGHT]]);
 }
 
 // Generates the connector for the key
 module connector(top_base_height_back) {
-	sagitta_difference = sagitta(connector_radius, connector_thickness);
+	sagitta_difference = sagitta(CONNECTOR_RADIUS, CONNECTOR_THICKNESS);
 
 	union() {
 		difference() {
-			cylinder(h=top_base_height_back - connector_height, r = connector_radius);
-			cylinder(h=top_base_height_back - connector_height, r = connector_radius - connector_thickness);
+			cylinder(h=top_base_height_back - CONNECTOR_HEIGHT, r = CONNECTOR_RADIUS);
+			cylinder(h=top_base_height_back - CONNECTOR_HEIGHT, r = CONNECTOR_RADIUS - CONNECTOR_THICKNESS);
 
-			translate([-connector_middle_space/2, -connector_radius, 0])
-				cube([connector_middle_space, 2 * connector_radius, top_base_height_back - connector_height - connector_support_height]);
+			translate([-CONNECTOR_MIDDLE_SPACE/2, -CONNECTOR_RADIUS, 0])
+				cube([CONNECTOR_MIDDLE_SPACE, 2 * CONNECTOR_RADIUS, top_base_height_back - CONNECTOR_HEIGHT - CONNECTOR_SUPPORT_HEIGHT]);
 		}
 	}
 }
 
 module connector_test() {
-	translate([0, 0, top_base_height_back - connector_height])
-		base(top_base_width, top_base_rotated_length, key_thickness);
+	translate([0, 0, top_base_height_back - CONNECTOR_HEIGHT])
+		base(top_base_width, top_base_rotated_length, KEY_THICKNESS);
 
 	translate([top_base_width/2, top_base_length/2, 0])
 		connector();

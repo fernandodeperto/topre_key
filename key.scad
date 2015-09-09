@@ -1,38 +1,30 @@
-include<modules.scad>;
-
 // Render precision
 // Set this to a small value for fast renders
 $fn = 100;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
-base_radius = 1.5;
+BASE_RADIUS = 1.5;
 
 // Angle measured on the HHKB
-keyboard_angle = 7.3;
+KEYBOARD_ANGLE = 7.3;
 
 // Basic key characteristics
-key_thickness = 1.4;
-top_base_extrusion_height = 0.01;
-bottom_base_extrusion_height = 0.01;
+KEY_THICKNESS = 1.4;
+TOP_BASE_EXTRUSION_HEIGHT = 0.01;
+BOTTOM_BASE_EXTRUSION_HEIGHT = 0.01;
 
 // Key size
-key_size = 1;
+KEY_SIZE = 1;
 
 // Connector dimensions
-connector_radius = 2.85;
-connector_height = -1.35;
-connector_thickness = 1;
-connector_support_height = 4;
-connector_middle_space = 1.5;
-
-// Dimension fields:
-// 0: top_base_height_back
-// 1: top_base_height_front
-// 2: top_base_rotated_length
-// 3: top_base_width
+CONNECTOR_RADIUS = 2.85;
+CONNECTOR_HEIGHT = -1.35;
+CONNECTOR_THICKNESS = 1;
+CONNECTOR_SUPPORT_HEIGHT = 4;
+CONNECTOR_MIDDLE_SPACE = 1.5;
 
 // Topre dimensions
-row_dimensions = [
+ROW_DIMENSIONS = [
 	[10.4, 64, 3], // Row E (default: [10.4, 3])
 	[8.2, 60, -2], // Row D (default: [8.2, -2])
 	[7, 58, -6], // Row C (default: [7, -6])
@@ -41,7 +33,7 @@ row_dimensions = [
 ];
 
 // Dimensions that are relevant to all rows
-key_dimensions = [
+KEY_DIMENSIONS = [
 	0.6, // Top base sagitta (default: 0.6)
 	11.5, // Top base width (default: 11.5)
 	18, // Bottom base length (default: 18)
@@ -50,7 +42,7 @@ key_dimensions = [
 ];
 
 // Symbol
-symbol_files = [
+SYMBOL_FILES = [
 	"dxf/deathly_hallows.dxf", // 0
 	"dxf/harry_potter.dxf", // 1
 	"dxf/mockinjay.dxf", // 2
@@ -67,32 +59,26 @@ symbol_files = [
 	"dxf/kojima.dxf", // 13
 ];
 
-symbol_thickness = 0.4;
-symbol_spacing = 1.4;
+SYMBOL_THICKNESS = 0.4;
+SYMBOL_SPACING = 1.4;
 
 // Some rendering options
-apply_keyboard_angle = 0;
-apply_key_angle = 1;
-apply_cylindrical_dish = 1;
-apply_symbol = 0;
-apply_support = 1;
-
-// Key dimensions
-top_base_sagitta = apply_cylindrical_dish ? key_dimensions[0] : 0;
-top_base_width = key_dimensions[1] * key_size;
-bottom_base_length = key_dimensions[2];
-bottom_base_width = key_dimensions[3] - key_dimensions[1] + key_dimensions[1] * key_size;
-bottom_base_angle_back = key_dimensions[4];
+APPLY_KEYBOARD_ANGLE = 0;
+APPLY_KEY_ANGLE = 1;
+APPLY_CYLINDRICAL_DISH = 1;
+APPLY_SYMBOL = 0;
+APPLY_SUPPORT = 0;
 
 // Support
-support_width = 3.5;
-support_height = 3.5;
-support_length = 2.5;
+SUPPORT_WIDTH = 3.5;
+SUPPORT_HEIGHT = 3.5;
+SUPPORT_LENGTH = 2.5;
 
-//connector_test();
+// Include the code for the modules and formulas
+include<modules.scad>;
 
-keycap_rows = [1, 2, 2, 3];
+keycap_rows = [0];
 for (i = [0:len(keycap_rows) - 1]) {
-	translate([i * bottom_base_width + i * support_length, 0, 0])
+	translate([i * bottom_base_width + i * SUPPORT_LENGTH, 0, 0])
 		key(keycap_rows[i]);
 }
