@@ -66,8 +66,8 @@ DEBUG_SYMBOL = 0;
 // Some rendering options
 APPLY_KEYBOARD_ANGLE = 0;
 APPLY_KEY_ANGLE = 1;
-APPLY_CYLINDRICAL_DISH = 0;
-APPLY_SYMBOL = 1;
+APPLY_CYLINDRICAL_DISH = 1;
+APPLY_SYMBOL = 0;
 APPLY_SUPPORT = 0;
 
 // Support
@@ -78,7 +78,7 @@ SUPPORT_LENGTH = 2.5;
 // Include the code for the modules and formulas
 include<modules.scad>;
 
-keycap_rows = [0];
+keycap_rows = [0, 1, 2, 3];
 keycap_symbols = [4];
 
 for (i = [0:len(keycap_rows) - 1]) {

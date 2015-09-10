@@ -28,13 +28,27 @@ module dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylind
 }
 
 // Basic key shape
-module key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length) {
-	hull() {
-		base(bottom_base_width, bottom_base_length, BOTTOM_BASE_EXTRUSION_HEIGHT);
+module key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length, back_cylinder_translate, rotated_cylinder_translate, cylinder_dish_radius) {
+	difference() {
+		hull() {
+			base(bottom_base_width, bottom_base_length, BOTTOM_BASE_EXTRUSION_HEIGHT);
 
-		translate([(bottom_base_width-top_base_width)/2, top_base_translate, top_base_height_back - TOP_BASE_EXTRUSION_HEIGHT])
-		rotate([-top_base_angle, 0, 0])
-			base(top_base_width, top_base_rotated_length, TOP_BASE_EXTRUSION_HEIGHT);
+			translate([(bottom_base_width-top_base_width)/2, top_base_translate, top_base_height_back - TOP_BASE_EXTRUSION_HEIGHT])
+			rotate([-top_base_angle, 0, 0])
+				base(top_base_width, top_base_rotated_length, TOP_BASE_EXTRUSION_HEIGHT);
+		}
+
+		if (APPLY_CYLINDRICAL_DISH) {
+			translate([bottom_base_width/2, top_base_translate, top_base_height_back])
+			rotate([-top_base_angle, 0, 0])
+				dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylinder_dish_radius, top_base_sagitta, back_cylinder_translate);
+		}
+
+		else {
+			translate([(bottom_base_width - top_base_width)/2, top_base_translate , top_base_height_back])
+			rotate([-top_base_angle, 0, 0])
+				cube([top_base_width, top_base_rotated_length, top_base_height_back]);
+		}
 	}
 }
 
@@ -64,28 +78,31 @@ module key(row, symbol_number) {
 	difference() {
 		union() {
 			difference() {
-				key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length);
+				key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length, back_cylinder_translate, rotated_cylinder_translate, cylinder_dish_radius);
 
 				translate([KEY_THICKNESS, KEY_THICKNESS, 0])
 				scale(key_scale)
-					key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length);
+					key_shape(top_base_translate, top_base_height_back, top_base_angle, top_base_rotated_length, back_cylinder_translate, rotated_cylinder_translate, cylinder_dish_radius);
+
 
 			}
 
-			translate([bottom_base_width/2, bottom_base_length/2, CONNECTOR_HEIGHT])
-				connector(top_base_height_back);
-		}
+			difference() {
+				translate([bottom_base_width/2, bottom_base_length/2, CONNECTOR_HEIGHT])
+					connector(max(top_base_height_front, top_base_height_back));
 
-		if (APPLY_CYLINDRICAL_DISH) {
-			translate([bottom_base_width/2, top_base_translate, top_base_height_back])
-			rotate([-top_base_angle, 0, 0])
-				dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylinder_dish_radius, top_base_sagitta, back_cylinder_translate);
-		}
+				if (APPLY_CYLINDRICAL_DISH) {
+					translate([bottom_base_width/2, top_base_translate, top_base_height_back])
+					rotate([-top_base_angle, 0, 0])
+						dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylinder_dish_radius, top_base_sagitta, back_cylinder_translate);
+				}
 
-		else {
-			translate([(bottom_base_width - top_base_width)/2, top_base_translate , top_base_height_back])
-			rotate([-top_base_angle, 0, 0])
-				cube([top_base_width, top_base_rotated_length, top_base_height_back]);
+				else {
+					translate([(bottom_base_width - top_base_width)/2, top_base_translate , top_base_height_back])
+					rotate([-top_base_angle, 0, 0])
+						cube([top_base_width, top_base_rotated_length, top_base_height_back]);
+				}
+			}
 		}
 	}
 
