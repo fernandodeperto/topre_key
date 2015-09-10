@@ -1,6 +1,6 @@
 // Render precision
 // Set this to a small value for fast renders
-$fn = 700;
+$fn = 100;
 
 // Radius of the cylinder used to round the edges of the top and bottom bases
 BASE_RADIUS = 1.5;
