@@ -25,11 +25,11 @@ CONNECTOR_MIDDLE_SPACE = 1.5;
 
 // Topre dimensions
 ROW_DIMENSIONS = [
-	[10.4, 64, 3], // Row E (default: [10.4, 3])
-	[8.2, 60, -2], // Row D (default: [8.2, -2])
-	[7, 58, -6], // Row C (default: [7, -6])
-	[6.7, 60, -13], // Row B (default: [6.7, -13])
-	[6.7, 60, -13], // Row A (default: [6.7, -13])
+	[10.2, 64, 2], // Row E
+	[8.2, 60, -2], // Row D
+	[6.7, 58, -8], // Row C
+	[6.7, 60, -13], // Row B
+	[6.7, 60, -13], // Row A
 ];
 
 // Dimensions that are relevant to all rows
