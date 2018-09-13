@@ -24,7 +24,7 @@ module base(width, length, extrusion) {
 module dish_cylinder(top_base_rotated_length, rotated_cylinder_translate, cylinder_dish_radius, top_base_sagitta, back_cylinder_translate) {
 	translate([0, top_base_rotated_length + rotated_cylinder_translate, cylinder_dish_radius - top_base_sagitta])
 	rotate([90,0,0])
-		cylinder(h=top_base_rotated_length + rotated_cylinder_translate + back_cylinder_translate, r=cylinder_dish_radius);
+		cylinder(h=top_base_rotated_length + rotated_cylinder_translate + back_cylinder_translate, r=cylinder_dish_radius, $fn=$fn*10);
 }
 
 // Basic key shape
